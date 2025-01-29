@@ -1,6 +1,5 @@
 # SE109-Programming-in-the-Large
 
-# SE109 - Programming in the Large
 
 | Chapter (File) | Main Topics Covered |
 |----------------|-------------------|
