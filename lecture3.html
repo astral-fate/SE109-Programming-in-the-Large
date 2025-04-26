@@ -1,0 +1,466 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE109 - Lecture 3: Math, Chars, Strings (Chapter 4)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Lecture 3: Mathematical Functions, Characters, and Strings</h1>
+        <p class="lecture-number">Covers Textbook Chapter 4</p>
+
+        <section id="problem-loan">
+            <h2>Opening Problem: Computing Loan Payments</h2>
+            <p>This program lets the user enter the annual interest rate, number of years, and loan amount, and computes the monthly payment and total payment using the formula:</p>
+            <p><code>monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - (1 / Math.pow(1 + monthlyInterestRate, numberOfYears * 12)))</code></p>
+            <p>Total Payment = `monthlyPayment * numberOfYears * 12`</p>
+            <pre><code>import java.util.Scanner;
+
+public class ComputeLoan {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        // Enter annual interest rate in percent, e.g., 7.25
+        System.out.print("Enter annual interest rate, e.g., 7.25: ");
+        double annualInterestRate = input.nextDouble();
+
+        // Obtain monthly interest rate
+        double monthlyInterestRate = annualInterestRate / 1200;
+
+        // Enter number of years
+        System.out.print("Enter number of years as an integer, e.g., 5: ");
+        int numberOfYears = input.nextInt();
+
+        // Enter loan amount
+        System.out.print("Enter loan amount, e.g., 120000.95: ");
+        double loanAmount = input.nextDouble();
+
+        // Calculate payment
+        double monthlyPayment = loanAmount * monthlyInterestRate / (1
+            - 1 / Math.pow(1 + monthlyInterestRate, numberOfYears * 12));
+        double totalPayment = monthlyPayment * numberOfYears * 12;
+
+        // Display results
+        System.out.println("The monthly payment is $" +
+            (int)(monthlyPayment * 100) / 100.0); // Format to two decimals
+        System.out.println("The total payment is $" +
+            (int)(totalPayment * 100) / 100.0); // Format to two decimals
+
+        input.close();
+    }
+}</code></pre>
+             <p>(Note: Run button on slide 166 is inactive.)</p>
+        </section>
+
+        <section id="objectives">
+             <h2>Objectives (Summary from Slide 167)</h2>
+             <p>This chapter covers using the `Math` class, the `char` type, character encoding (ASCII, Unicode), escape sequences, casting between numerics and chars, the `Character` class, `String` objects and methods (`length`, `charAt`, `concat`, case conversion, `trim`), reading strings/chars from console, comparing strings (`equals`, `compareTo`), substrings, finding characters/substrings (`indexOf`), converting between strings and numbers, and formatting output (`printf`).</p>
+        </section>
+
+        <section id="math-class">
+            <h2>Mathematical Functions (`Math` Class)</h2>
+            <p>Java's `java.lang.Math` class provides constants and static methods for common mathematical operations. You don't need to import it as `java.lang` is automatically imported.</p>
+
+            <h3>Class Constants:</h3>
+            <ul>
+                <li><code>Math.PI</code>: The constant π (approximately 3.14159).</li>
+                <li><code>Math.E</code>: The constant e (base of natural logarithms, approximately 2.71828).</li>
+            </ul>
+
+            <h3>Class Methods (Static):</h3>
+            <h4>Trigonometric Methods (Angles in Radians)</h4>
+            <ul>
+                <li><code>Math.sin(double a)</code></li>
+                <li><code>Math.cos(double a)</code></li>
+                <li><code>Math.tan(double a)</code></li>
+                <li><code>Math.acos(double a)</code> (inverse cosine)</li>
+                <li><code>Math.asin(double a)</code> (inverse sine)</li>
+                <li><code>Math.atan(double a)</code> (inverse tangent)</li>
+                <li><code>Math.toRadians(double degree)</code>: Converts degrees to radians.</li>
+                <li><code>Math.toDegrees(double radian)</code>: Converts radians to degrees.</li>
+            </ul>
+            <pre><code>// Examples:
+Math.sin(0)          // returns 0.0
+Math.sin(Math.PI / 6) // returns 0.5 (sin of 30 degrees)
+Math.cos(0)          // returns 1.0
+Math.toRadians(90.0) // returns PI / 2 (approx 1.57)</code></pre>
+
+            <h4>Exponent Methods</h4>
+            <ul>
+                <li><code>Math.exp(double a)</code>: Returns e<sup>a</sup>.</li>
+                <li><code>Math.log(double a)</code>: Returns the natural logarithm (base e) of a.</li>
+                <li><code>Math.log10(double a)</code>: Returns the base 10 logarithm of a.</li>
+                <li><code>Math.pow(double a, double b)</code>: Returns a<sup>b</sup>.</li>
+                <li><code>Math.sqrt(double a)</code>: Returns the square root of a (equivalent to `pow(a, 0.5)`).</li>
+            </ul>
+            <pre><code>// Examples:
+Math.exp(1)          // returns E (approx 2.718)
+Math.log(Math.E)     // returns 1.0
+Math.pow(2, 3)       // returns 8.0
+Math.sqrt(16)        // returns 4.0</code></pre>
+
+            <h4>Rounding Methods</h4>
+            <ul>
+                <li><code>Math.ceil(double x)</code>: Rounds x up to the nearest integer (returned as double). E.g., `ceil(2.1)` is 3.0, `ceil(-2.1)` is -2.0.</li>
+                <li><code>Math.floor(double x)</code>: Rounds x down to the nearest integer (returned as double). E.g., `floor(2.1)` is 2.0, `floor(-2.1)` is -3.0.</li>
+                <li><code>Math.rint(double x)</code>: Rounds x to the nearest integer. If equidistant, rounds to the even integer (returned as double). E.g., `rint(2.5)` is 2.0, `rint(3.5)` is 4.0, `rint(-2.5)` is -2.0.</li>
+                <li><code>Math.round(float x)</code>: Rounds float x to the nearest `int`. (Equivalent to `(int)Math.floor(x + 0.5)`).</li>
+                <li><code>Math.round(double x)</code>: Rounds double x to the nearest `long`. (Equivalent to `(long)Math.floor(x + 0.5)`).</li>
+            </ul>
+             <pre><code>// Examples:
+Math.round(2.6f) // returns 3 (int)
+Math.round(2.3)  // returns 2 (long)
+Math.round(-2.6) // returns -3 (long)</code></pre>
+
+             <h4>`min`, `max`, `abs`, and `random` Methods</h4>
+             <ul>
+                <li><code>Math.max(a, b)</code>: Returns the larger of a and b (overloaded for int, long, float, double).</li>
+                <li><code>Math.min(a, b)</code>: Returns the smaller of a and b (overloaded).</li>
+                <li><code>Math.abs(a)</code>: Returns the absolute value of a (overloaded).</li>
+                <li><code>Math.random()</code>: Returns a random `double` value in the range [0.0, 1.0) (0.0 inclusive, 1.0 exclusive).</li>
+             </ul>
+            <pre><code>// Examples:
+Math.max(5, 9)    // returns 9
+Math.min(3.4, 2.8) // returns 2.8
+Math.abs(-10)     // returns 10
+Math.random()     // returns value like 0.734..., 0.129..., etc.</code></pre>
+             <h5>Generating Random Numbers in a Range</h5>
+             <ul>
+                 <li>Random integer between 0 and 9: `(int)(Math.random() * 10)`</li>
+                 <li>Random integer between 50 and 99: `50 + (int)(Math.random() * 50)`</li>
+                 <li>General form: `a + (int)(Math.random() * b)` returns an integer between `a` (inclusive) and `a + b` (exclusive).</li>
+                 <li>General form for inclusive range [min, max]: `min + (int)(Math.random() * (max - min + 1))`</li>
+             </ul>
+
+            <h3>Case Study: Computing Angles of a Triangle</h3>
+            <p>Given the coordinates (x1, y1), (x2, y2), (x3, y3) of a triangle's vertices, compute the angles A, B, C using the law of cosines. First, calculate the side lengths a, b, c using the distance formula (based on `Math.sqrt` and `Math.pow`).</p>
+             <ul>
+                 <li>a = distance between (x2, y2) and (x3, y3)</li>
+                 <li>b = distance between (x1, y1) and (x3, y3)</li>
+                 <li>c = distance between (x1, y1) and (x2, y2)</li>
+             </ul>
+             <p>Then apply the law of cosines:</p>
+             <ul>
+                 <li>A = acos((a<sup>2</sup> - b<sup>2</sup> - c<sup>2</sup>) / (-2bc))</li>
+                 <li>B = acos((b<sup>2</sup> - a<sup>2</sup> - c<sup>2</sup>) / (-2ac))</li>
+                 <li>C = acos((c<sup>2</sup> - b<sup>2</sup> - a<sup>2</sup>) / (-2ab))</li>
+             </ul>
+             <p>Remember `Math.acos` returns radians, so convert to degrees using `Math.toDegrees` if needed.</p>
+             <p>(Note: Run button on slide 176 is inactive.)</p>
+        </section>
+
+        <section id="char-type">
+            <h2>Character Data Type (`char`)</h2>
+            <ul>
+                <li>Used to represent single characters.</li>
+                <li>Literals are enclosed in single quotes: `char letter = 'A';`, `char numChar = '4';`.</li>
+                <li>Java uses <strong>Unicode</strong>, a 16-bit encoding scheme, to represent characters. It supports characters from most languages worldwide.</li>
+                <li>Unicode values can be represented using hexadecimal escape sequences `\uXXXX`, where XXXX are four hex digits (0-9, A-F).
+                    <ul>
+                        <li>`char letter = '\u0041';` // Represents 'A' (Hex 41 is decimal 65)</li>
+                        <li>`char numChar = '\u0034';` // Represents '4' (Hex 34 is decimal 52)</li>
+                    </ul>
+                </li>
+                 <li>Unicode range: `\u0000` to `\uFFFF` (65,536 characters).</li>
+                 <li><strong>ASCII</strong> (American Standard Code for Information Interchange) is a subset of Unicode (`\u0000` to `\u007F`, or 0-127 decimal). It covers English letters, digits, punctuation.</li>
+                 <li>Common ASCII/Unicode ranges:
+                     <ul>
+                         <li>'0' to '9': `\u0030` to `\u0039` (48 to 57 decimal)</li>
+                         <li>'A' to 'Z': `\u0041` to `\u005A` (65 to 90 decimal)</li>
+                         <li>'a' to 'z': `\u0061` to `\u007A` (97 to 122 decimal)</li>
+                     </ul>
+                 </li>
+                 <li>Increment (`++`) and decrement (`--`) operators can be used on `char` variables to get the next/previous Unicode character.
+                    <pre><code>char ch = 'a';
+ch++; // ch is now 'b'
+System.out.println(++ch); // Prints 'c' (ch becomes 'c' first)</code></pre>
+                 </li>
+             </ul>
+
+             <h3>Escape Sequences for Special Characters</h3>
+             <p>Used to represent characters that cannot be typed directly or have special meaning in Java.</p>
+             <table>
+                 <thead><tr><th>Escape Sequence</th><th>Name</th><th>Unicode</th><th>Decimal</th></tr></thead>
+                 <tbody>
+                     <tr><td><code>\b</code></td><td>Backspace</td><td>\u0008</td><td>8</td></tr>
+                     <tr><td><code>\t</code></td><td>Tab</td><td>\u0009</td><td>9</td></tr>
+                     <tr><td><code>\n</code></td><td>Linefeed (Newline)</td><td>\u000A</td><td>10</td></tr>
+                     <tr><td><code>\f</code></td><td>Formfeed</td><td>\u000C</td><td>12</td></tr>
+                     <tr><td><code>\r</code></td><td>Carriage Return</td><td>\u000D</td><td>13</td></tr>
+                     <tr><td><code>\\</code></td><td>Backslash</td><td>\u005C</td><td>92</td></tr>
+                     <tr><td><code>\"</code></td><td>Double Quote</td><td>\u0022</td><td>34</td></tr>
+                     <tr><td><code>\'</code></td><td>Single Quote</td><td>\u0027</td><td>39</td></tr>
+                 </tbody>
+             </table>
+             <pre><code>System.out.println("He said, \"Java is fun!\"\nIt really is.");
+// Output:
+// He said, "Java is fun!"
+// It really is.</code></pre>
+
+            <h3>Casting Between `char` and Numeric Types</h3>
+            <ul>
+                <li>A `char` can be cast to any numeric type (its Unicode value is used).</li>
+                <li>A numeric type (`byte`, `short`, `int`) can be cast to `char` (truncating if necessary).</li>
+            </ul>
+            <pre><code>int i = 'a';      // i becomes 97 (Unicode of 'a')
+char c = 97;      // c becomes 'a'
+
+char c1 = (char)65.25; // c1 becomes 'A' (decimal part truncated)
+int i1 = (int)'A';     // i1 becomes 65</code></pre>
+
+            <h3>Comparing and Testing Characters</h3>
+            <p>Characters can be compared using relational operators based on their Unicode values.</p>
+            <pre><code>char ch = 'p';
+
+if (ch >= 'A' && ch <= 'Z') {
+    System.out.println(ch + " is an uppercase letter");
+} else if (ch >= 'a' && ch <= 'z') {
+    System.out.println(ch + " is a lowercase letter"); // This will print
+} else if (ch >= '0' && ch <= '9') {
+    System.out.println(ch + " is a numeric character");
+}</code></pre>
+
+             <h3>Methods in the `Character` Class</h3>
+             <p>The `java.lang.Character` class provides useful static methods for testing and converting characters.</p>
+             <table>
+                 <thead><tr><th>Method</th><th>Description</th></tr></thead>
+                 <tbody>
+                     <tr><td><code>isDigit(char ch)</code></td><td>Returns true if ch is a digit ('0'-'9').</td></tr>
+                     <tr><td><code>isLetter(char ch)</code></td><td>Returns true if ch is a letter.</td></tr>
+                     <tr><td><code>isLetterOrDigit(char ch)</code></td><td>Returns true if ch is a letter or a digit.</td></tr>
+                     <tr><td><code>isLowerCase(char ch)</code></td><td>Returns true if ch is a lowercase letter.</td></tr>
+                     <tr><td><code>isUpperCase(char ch)</code></td><td>Returns true if ch is an uppercase letter.</td></tr>
+                     <tr><td><code>toLowerCase(char ch)</code></td><td>Returns the lowercase equivalent of ch.</td></tr>
+                     <tr><td><code>toUpperCase(char ch)</code></td><td>Returns the uppercase equivalent of ch.</td></tr>
+                 </tbody>
+             </table>
+              <pre><code>System.out.println(Character.isDigit('5'));    // true
+System.out.println(Character.isLetter('b'));    // true
+System.out.println(Character.isLowerCase('C')); // false
+System.out.println(Character.toUpperCase('x')); // 'X'
+System.out.println(Character.toLowerCase('P')); // 'p'</code></pre>
+        </section>
+
+         <section id="string-type">
+             <h2>The String Type</h2>
+             <ul>
+                 <li>The `char` type represents only one character. To represent sequences of characters (text), use the `String` class.</li>
+                 <li>`String` is a predefined class in `java.lang`, not a primitive type. It's a <strong>reference type</strong>.</li>
+                 <li>String literals are enclosed in double quotes:
+                     <pre><code>String message = "Welcome to Java";</code></pre>
+                 </li>
+                 <li>String objects are <strong>immutable</strong>: once created, their content cannot be changed. Methods that seem to modify a string actually return a <em>new</em> String object with the changes.</li>
+             </ul>
+
+             <h3>Simple Methods for String Objects (Instance Methods)</h3>
+             <p>These methods are called on a specific String object (instance).</p>
+             <table>
+                 <thead><tr><th>Method</th><th>Description</th></tr></thead>
+                 <tbody>
+                     <tr><td><code>length()</code></td><td>Returns the number of characters in the string.</td></tr>
+                     <tr><td><code>charAt(int index)</code></td><td>Returns the character at the specified index (0-based).</td></tr>
+                     <tr><td><code>concat(String s1)</code></td><td>Returns a new string by appending s1 to this string. (Similar to `+` operator).</td></tr>
+                     <tr><td><code>toUpperCase()</code></td><td>Returns a new string with all letters converted to uppercase.</td></tr>
+                     <tr><td><code>toLowerCase()</code></td><td>Returns a new string with all letters converted to lowercase.</td></tr>
+                     <tr><td><code>trim()</code></td><td>Returns a new string with leading and trailing whitespace removed.</td></tr>
+                 </tbody>
+             </table>
+             <pre><code>String msg = " Welcome ";
+System.out.println("Length: " + msg.length());        // Length: 9
+System.out.println("Char at 1: " + msg.charAt(1));    // Char at 1: W
+System.out.println("Lowercase: " + msg.toLowerCase()); // Lowercase:  welcome
+System.out.println("Trimmed: " + msg.trim());         // Trimmed: Welcome
+System.out.println("Original msg: " + msg);           // Original msg:  Welcome  (unchanged)
+
+String s1 = "Hello";
+String s2 = "World";
+String s3 = s1.concat(s2); // s3 is "HelloWorld"</code></pre>
+
+            <h4>Getting String Length and Characters</h4>
+             <pre><code>String message = "Welcome to Java";
+int len = message.length(); // len is 15
+char firstChar = message.charAt(0); // firstChar is 'W'
+char lastChar = message.charAt(message.length() - 1); // lastChar is 'a'</code></pre>
+            <figure>
+                <img src="page_190.jpg" alt="Diagram showing string indices" style="max-width: 80%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">String Indices</figcaption>
+            </figure>
+
+             <h4>String Concatenation</h4>
+             <p>The `+` operator can be used to concatenate strings, or a string with other data types (which are converted to strings).</p>
+             <pre><code>String s1 = "Welcome " + "to " + "Java"; // s1 is "Welcome to Java"
+String s2 = "Chapter" + 2;             // s2 is "Chapter2" (int 2 converted to String)
+String s3 = "Supplement" + 'B';         // s3 is "SupplementB" (char 'B' converted)
+String s4 = "Value: " + 1.5;           // s4 is "Value: 1.5"</code></pre>
+             <p>If one operand is a String, `+` performs concatenation.</p>
+
+             <h3>Reading Strings from the Console</h3>
+             <ul>
+                 <li><code>input.next()</code>: Reads a string ending at the first whitespace character (space, tab, newline).</li>
+                 <li><code>input.nextLine()</code>: Reads the entire line of input up to the newline character (`\n`). The newline itself is consumed but not included in the returned string.</li>
+             </ul>
+             <pre><code>Scanner input = new Scanner(System.in);
+
+System.out.print("Enter three words separated by spaces: ");
+String w1 = input.next(); // Reads first word
+String w2 = input.next(); // Reads second word
+String w3 = input.next(); // Reads third word
+System.out.println("w1 is " + w1);
+System.out.println("w2 is " + w2);
+System.out.println("w3 is " + w3);
+
+// Consume the leftover newline from previous next() calls if mixing with nextLine()
+input.nextLine(); // Important if nextLine() follows next(), nextInt(), etc.
+
+System.out.print("Enter a full line of text: ");
+String line = input.nextLine(); // Reads the whole line
+System.out.println("Line entered: " + line);
+
+input.close();</code></pre>
+
+             <h4>Reading a Character from the Console</h4>
+             <p>There's no direct `nextChar()` method. Read a string and take the first character:</p>
+             <pre><code>Scanner input = new Scanner(System.in);
+System.out.print("Enter a character: ");
+String s = input.nextLine(); // Read the line (safer than next())
+char ch = s.charAt(0);       // Get the first character
+System.out.println("The character entered is " + ch);
+input.close();</code></pre>
+
+             <h3>Comparing Strings</h3>
+             <ul>
+                 <li><strong>Do NOT use `==` to compare string content.</strong> `==` checks if two reference variables point to the <em>same object</em> in memory, not if the strings have the same characters.</li>
+                 <li>Use the `.equals()` method to compare content (case-sensitive):
+                     <pre><code>String s1 = "hello";
+String s2 = "hello";
+String s3 = new String("hello");
+String s4 = "Hello";
+
+s1.equals(s2) // true
+s1.equals(s3) // true (content is the same)
+s1 == s2      // true (often pooled by compiler)
+s1 == s3      // false (s3 is a distinct object)
+s1.equals(s4) // false (case difference)</code></pre>
+                 </li>
+                 <li>Use `.equalsIgnoreCase()` for case-insensitive comparison:
+                      <pre><code>s1.equalsIgnoreCase(s4) // true</code></pre>
+                 </li>
+                 <li>Use `.compareTo()` for lexicographical comparison (based on Unicode values, like dictionary order). Returns:
+                     <ul>
+                         <li>0 if strings are equal.</li>
+                         <li>Negative value if this string comes before the other string.</li>
+                         <li>Positive value if this string comes after the other string.</li>
+                     </ul>
+                      <pre><code>s1.compareTo(s4) // Positive value ('h' > 'H')</code></pre>
+                 </li>
+                 <li>Use `.compareToIgnoreCase()` for case-insensitive lexicographical comparison.</li>
+                  <li>Other comparison methods: `startsWith(prefix)`, `endsWith(suffix)`, `contains(substring)`.</li>
+             </ul>
+               <p>(Note: Run button on slide 195 is inactive.)</p>
+
+
+             <h3>Obtaining Substrings</h3>
+             <ul>
+                 <li><code>substring(int beginIndex)</code>: Returns a new string from `beginIndex` to the end.</li>
+                 <li><code>substring(int beginIndex, int endIndex)</code>: Returns a new string from `beginIndex` up to (but <em>not including</em>) `endIndex`. The length is `endIndex - beginIndex`.</li>
+             </ul>
+             <pre><code>String message = "Welcome to Java";
+String s1 = message.substring(0, 11); // s1 is "Welcome to "
+String s2 = message.substring(11);    // s2 is "Java"</code></pre>
+            <figure>
+                <img src="page_196.jpg" alt="Diagram showing substring indices" style="max-width: 80%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">Substring Indices</figcaption>
+            </figure>
+
+             <h3>Finding Characters or Substrings</h3>
+             <ul>
+                 <li><code>indexOf(char ch)</code> / <code>indexOf(String s)</code>: Returns the index of the <em>first</em> occurrence, or -1 if not found.</li>
+                 <li><code>indexOf(char ch, int fromIndex)</code> / <code>indexOf(String s, int fromIndex)</code>: Starts searching from `fromIndex`.</li>
+                 <li><code>lastIndexOf(char ch)</code> / <code>lastIndexOf(String s)</code>: Returns the index of the <em>last</em> occurrence, or -1.</li>
+                 <li><code>lastIndexOf(char ch, int fromIndex)</code> / <code>lastIndexOf(String s, int fromIndex)</code>: Searches backward starting from `fromIndex`.</li>
+             </ul>
+             <pre><code>String s = "Kim Jones";
+int k = s.indexOf(' ');       // k is 3
+String firstName = s.substring(0, k); // "Kim"
+String lastName = s.substring(k + 1); // "Jones"
+
+s.indexOf('o')     // returns 5 (first 'o')
+s.lastIndexOf('o') // returns 5
+s.indexOf('J')     // returns 4
+s.indexOf('j')     // returns -1 (not found)</code></pre>
+
+             <h3>Conversion Between Strings and Numbers</h3>
+             <ul>
+                 <li><strong>String to Number:</strong> Use `parse` methods from wrapper classes (`Integer`, `Double`, etc.).
+                      <pre><code>String intString = "123";
+int intValue = Integer.parseInt(intString); // intValue is 123
+
+String doubleString = "123.45";
+double doubleValue = Double.parseDouble(doubleString); // doubleValue is 123.45</code></pre>
+                 </li>
+                  <li><strong>Number to String:</strong> Concatenate with an empty string `""`.
+                       <pre><code>int number = 456;
+String s = number + ""; // s is "456"
+
+double value = 78.9;
+String str = value + ""; // str is "78.9"</code></pre>
+                      (Alternatively, use `String.valueOf(number)`).
+                  </li>
+             </ul>
+         </section>
+
+         <section id="formatting-output">
+             <h2>Formatting Output (`System.out.printf`)</h2>
+             <p>Provides C-style formatted output, allowing more control over how numbers and text are displayed.</p>
+             <p>Syntax: <code>System.out.printf(format, item1, item2, ...);</code></p>
+             <ul>
+                 <li>`format`: A string containing fixed text and <strong>format specifiers</strong>.</li>
+                 <li>`items`: The values to be formatted, corresponding to the specifiers.</li>
+                 <li>Format specifiers start with `%` and indicate the type and format of the output.</li>
+             </ul>
+             <h4>Frequently Used Format Specifiers</h4>
+             <table>
+                 <thead><tr><th>Specifier</th><th>Output Type</th><th>Example</th></tr></thead>
+                 <tbody>
+                     <tr><td><code>%b</code></td><td>Boolean value</td><td>`true` or `false`</td></tr>
+                     <tr><td><code>%c</code></td><td>Character</td><td>`'a'`</td></tr>
+                     <tr><td><code>%d</code></td><td>Decimal integer (byte, short, int, long)</td><td>`200`</td></tr>
+                     <tr><td><code>%f</code></td><td>Floating-point number (float, double)</td><td>`45.460000`</td></tr>
+                     <tr><td><code>%e</code></td><td>Floating-point in scientific notation</td><td>`4.556000e+01`</td></tr>
+                     <tr><td><code>%s</code></td><td>String</td><td>`"Java is cool"`</td></tr>
+                 </tbody>
+             </table>
+             <h4>Specifying Width and Precision</h4>
+             <p>Syntax: <code>%[flags][width][.precision]specifier</code></p>
+              <ul>
+                 <li>`width`: Minimum number of characters to output. Padded with spaces if needed (usually on the left).</li>
+                 <li>`.precision`: Number of digits after the decimal point for floating-point numbers (`%f`, `%e`), or maximum characters for strings (`%s`).</li>
+                 <li>`flags`: Optional, e.g., `-` for left justification.</li>
+              </ul>
+             <pre><code>int count = 5;
+double amount = 45.56;
+System.out.printf("count is %d and amount is %f", count, amount);
+// Output: count is 5 and amount is 45.560000
+
+System.out.printf("Amount: %8.2f%n", amount); // Width 8, precision 2
+// Output: Amount:    45.56
+// (%n is platform-independent newline)
+
+System.out.printf("Count: %-5d Item: %s%n", count, "Apples"); // Left justify count in width 5
+// Output: Count: 5     Item: Apples</code></pre>
+               <p>(Note: Run button on slide 205 for FormatDemo is inactive.)</p>
+         </section>
+
+        <div class="navigation">
+            <a href="lecture2.html">&laquo; Previous Lecture (Chapter 3)</a>
+            <a href="lecture4.html">Next Lecture (Chapter 5) &raquo;</a>
+        </div>
+         <div class="navigation" style="margin-top: 10px; justify-content: center;">
+            <a href="index.html">Back to Index</a>
+        </div>
+    </div>
+</body>
+</html>

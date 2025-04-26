@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE109 - Lecture 4: Loops (Chapter 5)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Lecture 4: Loops</h1>
+        <p class="lecture-number">Covers Textbook Chapter 5</p>
+
+        <section id="motivation">
+            <h2>Motivation</h2>
+            <p>Suppose you need to print a string like "Welcome to Java!" a hundred times. Writing `System.out.println("Welcome to Java!");` 100 times would be extremely tedious. Loops provide a way to execute a block of statements repeatedly.</p>
+            <pre><code>// Problem: Repetitive Code
+System.out.println("Welcome to Java!");
+System.out.println("Welcome to Java!");
+// ... 98 more times ...
+System.out.println("Welcome to Java!");
+
+// Solution using a loop:
+int count = 0;
+while (count < 100) {
+    System.out.println("Welcome to Java!");
+    count++;
+}</code></pre>
+        </section>
+
+        <section id="objectives">
+             <h2>Objectives (Summary from Slide 212)</h2>
+             <p>This chapter introduces loops: `while`, `do-while`, and `for`. We will cover loop design, controlling loops with sentinel values, input redirection, nested loops, minimizing numerical errors in loops, and using `break` and `continue` for program control.</p>
+        </section>
+
+        <section id="while-loop">
+            <h2>The `while` Loop</h2>
+            <p>Executes statements repeatedly as long as a condition remains true. It's a pre-test loop: the condition is checked *before* each iteration.</p>
+            <pre><code>int count = 0; // 1. Initialize control variable
+
+while (count < 100) { // 2. Loop-continuation-condition
+    // Loop body: Statements to repeat
+    System.out.println("Welcome to Java!");
+    count++; // 3. Update control variable (to eventually end the loop)
+}
+// 4. Execution continues here after the loop finishes</code></pre>
+            <h4>Flowchart:</h4>
+             <figure>
+                <img src="page_213.jpg" alt="Flowchart for while loop" style="max-width: 80%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">`while` Loop Flowchart</figcaption>
+            </figure>
+            <h4>Trace Example (`while (count < 2)`):</h4>
+            <ol>
+                <li>`count` is initialized to 0.</li>
+                <li>Check condition (`0 < 2`): true.</li>
+                <li>Execute body: Print "Welcome to Java!", increment `count` to 1.</li>
+                <li>Check condition (`1 < 2`): true.</li>
+                <li>Execute body: Print "Welcome to Java!", increment `count` to 2.</li>
+                <li>Check condition (`2 < 2`): false.</li>
+                <li>Loop terminates. Execution continues after the loop.</li>
+            </ol>
+             <p>(Note: Animation links on slides 214-222 are inactive.)</p>
+
+            <h3>Loop Design Strategy</h3>
+            <ol>
+                <li>Identify the statements that need to be repeated (the loop body).</li>
+                <li>Wrap them in a loop structure (`while`, `do-while`, or `for`).</li>
+                <li>Determine the loop control variable(s) and the loop-continuation-condition.</li>
+                <li>Ensure the control variable is correctly initialized before the loop.</li>
+                <li>Ensure the control variable is updated within the loop body to eventually make the condition false (prevent infinite loops).</li>
+            </ol>
+
+            <h3>Problem: Repeat Addition Until Correct</h3>
+            <p>Modify the `AdditionQuiz` to repeatedly ask the user for the answer until it's correct.</p>
+            <pre><code>import java.util.Scanner;
+
+public class RepeatAdditionQuiz {
+    public static void main(String[] args) {
+        int number1 = (int)(Math.random() * 10);
+        int number2 = (int)(Math.random() * 10);
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("What is " + number1 + " + " + number2 + "? ");
+        int answer = input.nextInt();
+
+        while (number1 + number2 != answer) { // Loop condition: while answer is wrong
+            System.out.print("Wrong answer. Try again. What is " +
+                               number1 + " + " + number2 + "? ");
+            answer = input.nextInt(); // Get a new answer (update)
+        }
+
+        System.out.println("You got it!"); // Exits loop when answer is correct
+        input.close();
+    }
+}
+</code></pre>
+             <p>(Note: Run button on slide 223 is inactive.)</p>
+
+            <h3>Problem: Guessing Numbers</h3>
+            <p>The program generates a random number (0-100). The user guesses repeatedly until correct. The program provides feedback ("too low" or "too high").</p>
+             <pre><code>import java.util.Scanner;
+
+public class GuessNumber {
+    public static void main(String[] args) {
+        int number = (int)(Math.random() * 101); // 0 to 100 inclusive
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("Guess a magic number between 0 and 100");
+
+        int guess = -1; // Initialize guess to a value != number
+        while (guess != number) {
+            System.out.print("\nEnter your guess: ");
+            guess = input.nextInt();
+
+            if (guess == number) {
+                System.out.println("Yes, the number is " + number);
+            } else if (guess > number) {
+                System.out.println("Your guess is too high");
+            } else { // guess < number
+                System.out.println("Your guess is too low");
+            }
+        } // End of loop
+        input.close();
+    }
+}</code></pre>
+             <p>(Note: Run buttons on slide 224 are inactive.)</p>
+
+            <h3>Problem: An Advanced Math Learning Tool (Subtraction Quiz Loop)</h3>
+             <p>Generate five subtraction problems. Report the number of correct answers and time taken after all five questions.</p>
+              <pre><code>import java.util.Scanner;
+
+public class SubtractionQuizLoop {
+    public static void main(String[] args) {
+        final int NUMBER_OF_QUESTIONS = 5; // Constant for number of questions
+        int correctCount = 0; // Count the number of correct answers
+        int count = 0; // Count the number of questions
+        long startTime = System.currentTimeMillis(); // Get start time
+        String output = ""; // output string is initially empty
+        Scanner input = new Scanner(System.in);
+
+        while (count < NUMBER_OF_QUESTIONS) {
+            // 1. Generate two random single-digit integers
+            int number1 = (int)(Math.random() * 10);
+            int number2 = (int)(Math.random() * 10);
+
+            // 2. If number1 < number2, swap number1 with number2
+            if (number1 < number2) {
+                int temp = number1;
+                number1 = number2;
+                number2 = temp;
+            }
+
+            // 3. Prompt the student to answer "What is number1 - number2?"
+            System.out.print(
+                "What is " + number1 + " - " + number2 + "? ");
+            int answer = input.nextInt();
+
+            // 4. Grade the answer and display the result
+            if (number1 - number2 == answer) {
+                System.out.println("You are correct!");
+                correctCount++; // Increase the correct answer count
+            } else {
+                System.out.println("Your answer is wrong.\n" + number1
+                    + " - " + number2 + " should be " + (number1 - number2));
+            }
+
+            // Increase the question count
+            count++;
+
+            output += "\n" + number1 + "-" + number2 + "=" + answer +
+                ((number1 - number2 == answer) ? " correct" : " wrong");
+        } // End of loop
+
+        long endTime = System.currentTimeMillis(); // Get end time
+        long testTime = endTime - startTime; // Calculate test time
+
+        System.out.println("\nCorrect count is " + correctCount +
+            "\nTest time is " + testTime / 1000 + " seconds\n" + output);
+
+        input.close();
+    }
+}</code></pre>
+               <p>(Note: Run/Animation buttons on slide 225 are inactive.)</p>
+
+            <h3>Ending a Loop with a Sentinel Value</h3>
+            <p>Used when the number of iterations is not known beforehand. A special input value (the <strong>sentinel</strong>) signals the end of input.</p>
+            <p>Problem: Read and sum an unspecified number of integers. Input stops when 0 is entered (0 is the sentinel value).</p>
+             <pre><code>import java.util.Scanner;
+
+public class SentinelValue {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Enter an integer (the input ends if it is 0): ");
+        int data = input.nextInt();
+
+        // Keep reading data until the input is 0
+        int sum = 0;
+        while (data != 0) { // Sentinel value is 0
+            sum += data;
+
+            // Read the next data
+            System.out.print("Enter an integer (the input ends if it is 0): ");
+            data = input.nextInt();
+        } // Loop ends when data becomes 0
+
+        System.out.println("The sum is " + sum);
+        input.close();
+    }
+}</code></pre>
+               <p>(Note: Run button on slide 226 is inactive.)</p>
+               <div class="caution">
+                   <h4>Caution: Floating-Point Equality</h4>
+                   <p>Do not use floating-point values for sentinel checks or loop conditions involving exact equality (<code>!= 0</code>, <code>== target</code>). Due to precision errors, a value might become extremely close to the sentinel (e.g., 0.0000000000000001) but never exactly equal, potentially causing infinite loops.</p>
+                   <pre><code>// POTENTIALLY INFINITE LOOP!
+double item = 1.0;
+double sum = 0.0;
+while (item != 0.0) { // Condition might never be false due to precision
+    sum += item;
+    item -= 0.1;
+}
+System.out.println(sum);</code></pre>
+                   <p>Instead, use a condition like `while (item > threshold)` or compare using a small tolerance `while (Math.abs(item) > epsilon)`.</p>
+               </div>
+        </section>
+
+        <section id="do-while-loop">
+            <h2>The `do-while` Loop</h2>
+            <p>Similar to `while`, but the loop body executes at least once *before* the condition is checked. It's a post-test loop.</p>
+            <pre><code>do {
+    // Loop body;
+    // Statement(s);
+} while (loop-continuation-condition); // Note the semicolon!</code></pre>
+            <h4>Flowchart:</h4>
+              <figure>
+                <img src="page_228.jpg" alt="Flowchart for do-while loop" style="max-width: 40%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">`do-while` Loop Flowchart</figcaption>
+            </figure>
+             <p>Useful when the loop body must execute at least once, such as prompting for input until valid input is received.</p>
+             <h4>Example (Sentinel Value using do-while):</h4>
+              <pre><code>import java.util.Scanner;
+
+public class SentinelValueDoWhile {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int data;
+        int sum = 0;
+
+        // Keep reading data until the input is 0
+        do {
+            // Read the next data (executes at least once)
+            System.out.print("Enter an integer (the input ends if it is 0): ");
+            data = input.nextInt();
+
+            sum += data;
+        } while (data != 0); // Condition checked after the body
+
+        System.out.println("The sum is " + sum);
+        input.close();
+    }
+}</code></pre>
+        </section>
+
+        <section id="for-loop">
+            <h2>The `for` Loop</h2>
+            <p>Often used when the number of iterations is known or can be determined in advance. It combines initialization, condition checking, and update into one header.</p>
+            <pre><code>for (initial-action; loop-continuation-condition; action-after-each-iteration) {
+    // Loop body;
+    // Statement(s);
+}</code></pre>
+            <ul>
+                <li><strong>initial-action:</strong> Executes once before the loop starts (e.g., `int i = 0`). Variables declared here have scope only within the loop.</li>
+                <li><strong>loop-continuation-condition:</strong> Checked *before* each iteration. If true, the loop body executes.</li>
+                <li><strong>action-after-each-iteration:</strong> Executes *after* each iteration (e.g., `i++`).</li>
+            </ul>
+            <h4>Example: Printing "Welcome to Java" 100 times</h4>
+            <pre><code>for (int i = 0; i < 100; i++) {
+    System.out.println("Welcome to Java!");
+}</code></pre>
+            <h4>Flowchart:</h4>
+             <figure>
+                <img src="page_229.jpg" alt="Flowchart for for loop" style="max-width: 90%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">`for` Loop Flowchart</figcaption>
+            </figure>
+            <h4>Trace Example (`for (int i = 0; i < 2; i++)`):</h4>
+            <ol>
+                <li>Execute initial-action: declare `i`, set `i` to 0.</li>
+                <li>Check condition (`0 < 2`): true.</li>
+                <li>Execute body: Print "Welcome to Java!".</li>
+                <li>Execute action-after-each-iteration: `i++` (i becomes 1).</li>
+                <li>Check condition (`1 < 2`): true.</li>
+                <li>Execute body: Print "Welcome to Java!".</li>
+                <li>Execute action-after-each-iteration: `i++` (i becomes 2).</li>
+                <li>Check condition (`2 < 2`): false.</li>
+                <li>Loop terminates.</li>
+            </ol>
+             <p>(Note: Animation links on slides 230-239 are inactive.)</p>
+
+            <div class="note">
+                <h4>Notes on `for` Loops:</h4>
+                <ul>
+                    <li>The initial-action, condition, and action-after-each-iteration parts are all optional.</li>
+                    <li>`for ( ; ; ) { ... }` is an infinite loop, equivalent to `while (true) { ... }`.</li>
+                    <li>The initial-action and action-after-each-iteration can contain multiple comma-separated expressions/statements:
+                        <pre><code>// Example: Multiple initializations and updates
+for (int i = 0, j = 10; i < j; i++, j--) {
+    System.out.println("i=" + i + ", j=" + j);
+}</code></pre>
+                    </li>
+                </ul>
+            </div>
+             <div class="caution">
+                 <h4>Caution: Semicolon after `for` header</h4>
+                 <p>Similar to `if`, putting a semicolon immediately after the `for(...)` header creates an empty loop body. The intended body (in `{}`) will execute only once *after* the loop finishes.</p>
+                 <pre><code class="language-java">// WRONG - Logic Error!
+for (int i=0; i<10; i++); // Semicolon means empty loop body!
+{
+    // This block executes only ONCE after the loop (when i is 10)
+    System.out.println("i is " + i); // Prints "i is 10"
+}</code></pre>
+             </div>
+        </section>
+
+        <section id="loop-choice">
+            <h2>Which Loop to Use? (`while` vs. `do-while` vs. `for`)</h2>
+            <ul>
+                <li>All three loop types are expressively equivalent (any loop can be written using any of the types).</li>
+                <li><strong>Recommendation:</strong> Use the one that is most intuitive for the specific problem.</li>
+                <li><strong>`for` loop:</strong> Generally preferred when the number of iterations is known or determined by a counter (e.g., iterating 100 times, iterating through an array).</li>
+                <li><strong>`while` loop:</strong> Generally preferred when the number of iterations is unknown and depends on a condition being met (e.g., sentinel-controlled loops, waiting for valid input). The condition is checked *before* the first iteration.</li>
+                <li><strong>`do-while` loop:</strong> Used when the loop body *must* execute at least once, regardless of the condition (e.g., presenting a menu and getting input at least once). The condition is checked *after* the first iteration.</li>
+            </ul>
+        </section>
+
+        <section id="nested-loops">
+            <h2>Nested Loops</h2>
+            <p>A loop placed inside another loop. The inner loop completes all its iterations for each single iteration of the outer loop.</p>
+            <h4>Example: Printing a Multiplication Table</h4>
+             <pre><code>public class MultiplicationTable {
+    public static void main(String[] args) {
+        System.out.println("      Multiplication Table");
+        // Display the number title
+        System.out.print("    ");
+        for (int j = 1; j <= 9; j++)
+            System.out.printf("%4d", j); // Use printf for alignment
+        System.out.println("\n-----------------------------------------");
+
+        // Display table body
+        for (int i = 1; i <= 9; i++) { // Outer loop for rows
+            System.out.print(i + " | ");
+            for (int j = 1; j <= 9; j++) { // Inner loop for columns
+                // Display the product and align properly
+                System.out.printf("%4d", i * j);
+            }
+            System.out.println(); // New line after each row
+        }
+    }
+}</code></pre>
+            <p>(Note: Run button on slide 246 is inactive.)</p>
+        </section>
+
+        <section id="numerical-errors">
+            <h2>Minimizing Numerical Errors</h2>
+            <p>Floating-point arithmetic can introduce small errors. When summing a series, it's often better to sum from smaller numbers to larger numbers to minimize accumulated errors, although this is not always guaranteed to fix the problem entirely.</p>
+             <h4>Example: Summing 0.01 + 0.02 + ... + 1.0</h4>
+             <pre><code>// Method 1: Summing forward (may accumulate errors)
+double sumForward = 0.0;
+for (double i = 0.01; i <= 1.0; i += 0.01) {
+    sumForward += i;
+}
+System.out.println("Summing forward: " + sumForward); // Might be slightly off 50.5
+
+// Method 2: Summing backward (potentially more accurate)
+double sumBackward = 0.0;
+for (double i = 1.0; i >= 0.01; i -= 0.01) {
+     sumBackward += i;
+}
+System.out.println("Summing backward: " + sumBackward); // Might be closer to 50.5
+
+// Method 3: Using integers to control the loop (often best)
+double sumIntControl = 0.0;
+for (int i = 1; i <= 100; i++) {
+    sumIntControl += i / 100.0; // Calculate float value inside
+}
+System.out.println("Summing with int control: " + sumIntControl); // Likely most accurate
+</code></pre>
+             <p>(Note: Run button on slide 247 is inactive.)</p>
+              <p>Using integer counters and calculating the floating-point value inside the loop can often yield better precision than incrementing a floating-point loop variable directly.</p>
+        </section>
+
+        <section id="case-studies">
+             <h2>Case Studies Using Loops</h2>
+             <h3>Finding the Greatest Common Divisor (GCD)</h3>
+             <p>Problem: Find the largest integer that divides two positive integers `n1` and `n2` without leaving a remainder.</p>
+             <p>Approach: Start checking potential divisors `k` from `min(n1, n2)` down to 1. The first `k` that divides both `n1` and `n2` evenly (`n1 % k == 0 && n2 % k == 0`) is the GCD.</p>
+             <pre><code>import java.util.Scanner;
+
+public class GreatestCommonDivisor {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter first integer: ");
+        int n1 = input.nextInt();
+        System.out.print("Enter second integer: ");
+        int n2 = input.nextInt();
+
+        int gcd = 1; // Initial gcd is 1
+        int k = 2;   // Possible gcd candidate
+
+        while (k <= n1 && k <= n2) { // Check up to the smaller number
+            if (n1 % k == 0 && n2 % k == 0) {
+                gcd = k; // Update gcd if k is a common divisor
+            }
+            k++;
+        }
+
+        System.out.println("The greatest common divisor for " + n1 +
+                           " and " + n2 + " is " + gcd);
+        input.close();
+    }
+}</code></pre>
+               <p>(Note: Run button on slide 248 is inactive. The code there implies checking from 2 upwards, the code here implements a common alternative or checks from 2 up and keeps track of the largest found.)</p>
+
+              <h3>Predicting Future Tuition</h3>
+              <p>Problem: University tuition is $10,000 this year and increases by 7% annually. How many years until it doubles?</p>
+              <pre><code>public class FutureTuition {
+    public static void main(String[] args) {
+        double tuition = 10000; // Year 0
+        int year = 0;
+        double targetTuition = tuition * 2;
+
+        while (tuition < targetTuition) {
+            tuition = tuition * 1.07; // Increase by 7%
+            year++;                 // Increment year
+        }
+
+        System.out.println("Tuition will be doubled in " + year + " years");
+        System.out.printf("Tuition will be $%.2f in %d years%n", tuition, year);
+    }
+}</code></pre>
+                <p>(Note: Run button on slide 249 is inactive.)</p>
+         </section>
+
+        <section id="break-continue">
+            <h2>Using `break` and `continue`</h2>
+            <p>Keywords used to alter the flow of control within loops (and `switch` for `break`).</p>
+
+            <h3>`break`</h3>
+            <ul>
+                <li>Immediately terminates the innermost loop (<code>while</code>, <code>do-while</code>, <code>for</code>) or <code>switch</code> statement it is in.</li>
+                <li>Execution continues with the statement immediately following the terminated loop/switch.</li>
+            </ul>
+             <pre><code>// TestBreak.java Example (Sum numbers until sum >= 100)
+public class TestBreak {
+    public static void main(String[] args) {
+        int sum = 0;
+        int number = 0;
+        while (number < 20) {
+            number++;
+            sum += number;
+            if (sum >= 100) {
+                break; // Exit the loop early
+            }
+        }
+        System.out.println("The number is " + number); // Last number added
+        System.out.println("The sum is " + sum);     // Sum when loop broke
+    }
+}
+// Output: The number is 14 / The sum is 105</code></pre>
+
+            <h3>`continue`</h3>
+            <ul>
+                <li>Skips the *current iteration* of the innermost loop (<code>while</code>, <code>do-while</code>, <code>for</code>).</li>
+                <li>Execution jumps to the end of the loop body.
+                    <ul>
+                        <li>In a `while` or `do-while` loop, the loop condition is then re-evaluated.</li>
+                        <li>In a `for` loop, the update expression (`action-after-each-iteration`) is executed, then the condition is re-evaluated.</li>
+                    </ul>
+                 </li>
+            </ul>
+            <pre><code>// TestContinue.java Example (Sum numbers 0-19, skipping 10 and 11)
+public class TestContinue {
+    public static void main(String[] args) {
+        int sum = 0;
+        int number = 0;
+        while (number < 20) {
+            number++;
+            if (number == 10 || number == 11) {
+                continue; // Skip the rest of the loop body for 10 and 11
+            }
+            sum += number; // This line is skipped when number is 10 or 11
+        }
+        System.out.println("The sum is " + sum); // Sum of 1..9 and 12..20
+    }
+}
+// Output: The sum is 189</code></pre>
+             <p>(Note: Run buttons on slide 251 are inactive.)</p>
+
+             <h3>Guessing Number Problem Revisited (using `break`)</h3>
+             <p>We can simplify the `GuessNumber` loop using an infinite loop and `break`.</p>
+              <pre><code>// GuessNumberUsingBreak.java
+import java.util.Scanner;
+
+public class GuessNumberUsingBreak {
+    public static void main(String[] args) {
+        int number = (int)(Math.random() * 101);
+        Scanner input = new Scanner(System.in);
+        System.out.println("Guess a magic number between 0 and 100");
+
+        while (true) { // Infinite loop
+            System.out.print("\nEnter your guess: ");
+            int guess = input.nextInt();
+
+            if (guess == number) {
+                System.out.println("Yes, the number is " + number);
+                break; // Exit loop when correct
+            } else if (guess > number) {
+                System.out.println("Your guess is too high");
+            } else {
+                System.out.println("Your guess is too low");
+            }
+        } // Loop continues until break is encountered
+        input.close();
+    }
+}</code></pre>
+                <p>(Note: Run button on slide 254 is inactive.)</p>
+
+        </section>
+
+         <section id="more-examples">
+             <h2>More Loop Examples</h2>
+             <h3>Problem: Finding Palindromes</h3>
+             <p>A palindrome is a string that reads the same forwards and backwards (e.g., "madam", "racecar"). Check if a given string is a palindrome.</p>
+              <pre><code>import java.util.Scanner;
+
+public class CheckPalindrome {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter a string: ");
+        String s = input.nextLine();
+
+        int low = 0; // Index of the first character
+        int high = s.length() - 1; // Index of the last character
+
+        boolean isPalindrome = true; // Assume it's a palindrome initially
+        while (low < high) {
+            if (s.charAt(low) != s.charAt(high)) {
+                isPalindrome = false; // Found a mismatch
+                break; // No need to check further
+            }
+            low++;
+            high--;
+        }
+
+        if (isPalindrome) {
+            System.out.println(s + " is a palindrome");
+        } else {
+            System.out.println(s + " is not a palindrome");
+        }
+        input.close();
+    }
+}</code></pre>
+                <p>(Note: Run button on slide 255 is inactive.)</p>
+
+             <h3>Problem: Displaying Prime Numbers</h3>
+             <p>A prime number is an integer greater than 1 whose only positive divisors are 1 and itself. Display the first 50 prime numbers, 10 per line.</p>
+             <pre><code>public class PrimeNumber {
+    public static void main(String[] args) {
+        final int NUMBER_OF_PRIMES = 50; // Number of primes to display
+        final int NUMBER_OF_PRIMES_PER_LINE = 10; // Display 10 per line
+        int count = 0; // Count the number of prime numbers
+        int number = 2; // A number to be tested for primality
+
+        System.out.println("The first 50 prime numbers are \n");
+
+        // Repeatedly find prime numbers
+        while (count < NUMBER_OF_PRIMES) {
+            // Assume the number is prime
+            boolean isPrime = true; // Is the current number prime?
+
+            // Test whether number is prime
+            // Check divisors from 2 up to number/2
+            for (int divisor = 2; divisor <= number / 2; divisor++) {
+                if (number % divisor == 0) { // If true, number is not prime
+                    isPrime = false; // Set isPrime to false
+                    break; // Exit the inner for loop
+                }
+            }
+
+            // Display the prime number and increase the count
+            if (isPrime) {
+                count++; // Increase the count
+
+                if (count % NUMBER_OF_PRIMES_PER_LINE == 0) {
+                    // Print the number and advance to the new line
+                    System.out.printf("%-5d\n", number);
+                } else {
+                    System.out.printf("%-5d", number); // Print with spacing
+                }
+            }
+
+            // Check if the next number is prime
+            number++;
+        } // End while
+    }
+}</code></pre>
+               <p>(Note: Run button on slide 256 is inactive.)</p>
+         </section>
+
+
+        <div class="navigation">
+            <a href="lecture3.html">&laquo; Previous Lecture (Chapter 4)</a>
+            <a href="lecture5.html">Next Lecture (Chapter 6) &raquo;</a>
+        </div>
+        <div class="navigation" style="margin-top: 10px; justify-content: center;">
+            <a href="index.html">Back to Index</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE109 - Lecture 2: Selections (Chapter 3)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Lecture 2: Selections</h1>
+        <p class="lecture-number">Covers Textbook Chapter 3</p>
+
+        <section id="motivation">
+            <h2>Motivation</h2>
+            <p>If you assign a negative value for <code>radius</code> in the previous chapter's <code>ComputeAreaWithConsoleInput.java</code>, the program would print an invalid (negative) area. We need a way to handle situations like this – if the radius is negative, we don't want the program to compute the area. This chapter introduces selection statements (`if`, `switch`) to control the flow of execution based on conditions.</p>
+        </section>
+
+        <section id="objectives">
+             <h2>Objectives (Summary from Slide 111)</h2>
+             <p>This chapter covers: declaring `boolean` variables, using relational operators, implementing `if`, `if-else`, nested `if`, and multi-way `if-else` statements, avoiding common `if` statement errors, generating random numbers with `Math.random()`, combining conditions with logical operators (`&&`, `||`, `!`), using `switch` statements, the conditional operator (?:), operator precedence and associativity, and debugging techniques.</p>
+        </section>
+
+        <section id="boolean-type">
+            <h2>The `boolean` Type and Relational Operators</h2>
+            <ul>
+                <li>Often, programs need to compare values (e.g., is `i` greater than `j`?).</li>
+                <li>Java provides six <strong>comparison operators</strong> (also called <strong>relational operators</strong>) for this.</li>
+                <li>The result of a comparison is a <strong>Boolean value</strong>: either <code>true</code> or <code>false</code>.</li>
+                <li>The `boolean` data type has only two possible values: `true` and `false`.</li>
+                <li>Example:
+                    <pre><code>boolean isPositive = (number > 0);
+boolean isZero = (count == 0);
+boolean b = (1 > 2); // b will be false</code></pre>
+                </li>
+            </ul>
+
+            <h3>Relational Operators</h3>
+            <table>
+                <thead>
+                    <tr><th>Java Operator</th><th>Mathematics Symbol</th><th>Name</th><th>Example (radius is 5)</th><th>Result</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>&lt;</code></td><td>&lt;</td><td>less than</td><td><code>radius &lt; 0</code></td><td><code>false</code></td></tr>
+                    <tr><td><code>&lt;=</code></td><td>≤</td><td>less than or equal to</td><td><code>radius &lt;= 0</code></td><td><code>false</code></td></tr>
+                    <tr><td><code>&gt;</code></td><td>&gt;</td><td>greater than</td><td><code>radius &gt; 0</code></td><td><code>true</code></td></tr>
+                    <tr><td><code>&gt;=</code></td><td>≥</td><td>greater than or equal to</td><td><code>radius &gt;= 0</code></td><td><code>true</code></td></tr>
+                    <tr><td><code>==</code></td><td>=</td><td>equal to</td><td><code>radius == 0</code></td><td><code>false</code></td></tr>
+                    <tr><td><code>!=</code></td><td>≠</td><td>not equal to</td><td><code>radius != 0</code></td><td><code>true</code></td></tr>
+                </tbody>
+            </table>
+             <div class="caution">
+                 <strong>Caution:</strong> Use <code>==</code> for equality comparison, not <code>=</code> (which is the assignment operator). Using <code>=</code> where <code>==</code> is needed is a common error.
+             </div>
+        </section>
+
+        <section id="if-statements">
+            <h2>Selection Statements: `if`</h2>
+
+            <h3>One-way `if` Statements</h3>
+            <p>Executes an action only if the condition is true.</p>
+            <pre><code>if (boolean-expression) {
+    // statement(s) to execute if the expression is true;
+}
+// Continues execution here regardless</code></pre>
+            <h4>Example:</h4>
+            <pre><code>if (radius >= 0) {
+    double area = radius * radius * 3.14159;
+    System.out.println("The area for the circle of radius " +
+        radius + " is " + area);
+}
+// If radius is negative, the block is skipped.</code></pre>
+             <figure>
+                <img src="page_115.jpg" alt="Flowchart for one-way if statement" style="max-width: 80%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">One-way `if` Statement Flowchart</figcaption>
+            </figure>
+             <div class="note">
+                 <strong>Note:</strong> The braces <code>{}</code> can be omitted if there is only <em>one</em> statement in the `if` block. However, it's good practice to always use braces to avoid potential errors and improve readability.
+                 <pre><code>// Correct but potentially confusing without braces:
+if (i > 0)
+    System.out.println("i is positive");
+
+// Preferred style:
+if (i > 0) {
+    System.out.println("i is positive");
+}</code></pre>
+                 <p><strong>Important:</strong> Do not put a semicolon directly after the `if (condition)` part unless you intend an empty statement block, which is usually a logic error (see Common Errors section).</p>
+             </div>
+
+            <h3>Two-way `if-else` Statements</h3>
+            <p>Executes one block of code if the condition is true, and another block if the condition is false.</p>
+            <pre><code>if (boolean-expression) {
+    // statement(s) for the true case;
+} else {
+    // statement(s) for the false case;
+}
+// Continues execution here after one block executes</code></pre>
+            <h4>Example:</h4>
+            <pre><code>if (radius >= 0) {
+    double area = radius * radius * 3.14159;
+    System.out.println("The area for the circle of radius " +
+        radius + " is " + area);
+} else {
+    System.out.println("Negative input");
+}</code></pre>
+              <figure>
+                <img src="page_117.jpg" alt="Flowchart for two-way if-else statement" style="max-width: 60%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">Two-way `if-else` Statement Flowchart</figcaption>
+            </figure>
+
+             <h3>Problem: Simple Math Learning Tool (Addition Quiz)</h3>
+             <p>Generate two single-digit random numbers, ask the user for their sum, and report if the answer is true or false.</p>
+             <pre><code>import java.util.Scanner;
+
+public class AdditionQuiz {
+    public static void main(String[] args) {
+        // Generate two random single-digit integers
+        int number1 = (int)(Math.random() * 10);
+        int number2 = (int)(Math.random() * 10);
+
+        // Create a Scanner
+        Scanner input = new Scanner(System.in);
+
+        // Prompt the user
+        System.out.print("What is " + number1 + " + " + number2 + "? ");
+        int answer = input.nextInt();
+
+        // Check the answer and display result
+        if (number1 + number2 == answer) {
+            System.out.println("You are correct!");
+        } else {
+            System.out.println("Your answer is wrong.");
+            System.out.println(number1 + " + " + number2 + " should be " + (number1 + number2));
+        }
+        input.close();
+    }
+}
+</code></pre>
+             <p>(Note: Run/Animation buttons on slide 114 are inactive.)</p>
+
+            <h3>Nested `if` and Multi-way `if-else` Statements</h3>
+            <p>An `if` or `if-else` statement can be placed inside another `if` or `else` block. This is called nesting.</p>
+            <p>A common pattern is the multi-way `if-else` statement, used to decide among several alternatives:</p>
+            <pre><code>if (score >= 90.0) {
+    System.out.print("A");
+} else if (score >= 80.0) {
+    System.out.print("B");
+} else if (score >= 70.0) {
+    System.out.print("C");
+} else if (score >= 60.0) {
+    System.out.print("D");
+} else {
+    System.out.print("F");
+}</code></pre>
+             <p>This is more readable than deeply nested `if` statements (shown on slide 119a). The `else if` structure creates a chain of conditions evaluated in order. The first one that is true executes its block, and the rest are skipped.</p>
+              <figure>
+                <img src="page_120.jpg" alt="Flowchart for multi-way if-else statement" style="max-width: 80%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">Multi-way `if-else` Statement Flowchart (Grade Example)</figcaption>
+            </figure>
+             <h4>Trace Example (score = 70.0):</h4>
+             <ol>
+                 <li><code>if (score >= 90.0)</code> -> (70.0 >= 90.0) is false.</li>
+                 <li><code>else if (score >= 80.0)</code> -> (70.0 >= 80.0) is false.</li>
+                 <li><code>else if (score >= 70.0)</code> -> (70.0 >= 70.0) is true.</li>
+                 <li>Execute `System.out.print("C");`.</li>
+                 <li>Exit the entire `if-else if-else` structure.</li>
+             </ol>
+
+             <div class="note">
+                 <h4>`else` Clause Matching</h4>
+                 <p>An `else` clause always matches the most recent *unmatched* `if` clause in the same block. Use braces `{}` to override this and force an `else` to match an outer `if`.</p>
+                 <pre><code>// Example from slide 126 (without proper indentation causing potential confusion)
+int i = 1, j = 2, k = 3;
+if (i > j) // This if is false
+    if (i > k) // This inner if is never reached
+        System.out.println("A");
+else // This else matches the INNER if (i > k), but since that wasn't reached, nothing happens here.
+    System.out.println("B");
+// Output: (Nothing is printed)
+
+// Corrected with braces to match outer if:
+if (i > j) { // False
+    if (i > k)
+        System.out.println("A");
+} else { // This else matches the OUTER if (i > j)
+    System.out.println("B");
+}
+// Output: B
+</code></pre>
+             </div>
+        </section>
+
+        <section id="common-errors">
+            <h2>Common Errors and Pitfalls with `if` Statements</h2>
+            <ol>
+                <li><strong>Forgetting Braces `{}`:</strong> If you omit braces for a block with multiple statements, only the first statement becomes part of the `if` or `else`, leading to logic errors. <em>Always use braces for clarity and safety.</em></li>
+                <li><strong>Semicolon after `if` condition:</strong> Placing a semicolon immediately after `if(condition);` creates an empty statement for the `if` block. The subsequent block `{...}` will *always* execute, regardless of the condition. This is a common logic error.
+                    <pre><code class="language-java">// WRONG - Logic Error!
+if (radius >= 0); // Semicolon here means the if block is empty!
+{
+    // This block always executes, even if radius is negative!
+    area = radius*radius*PI;
+    System.out.println("Area is " + area);
+}</code></pre>
+                </li>
+                 <li><strong>Redundant Testing of Boolean Variables:</strong> Instead of `if (even == true)`, simply use `if (even)`. Instead of `if (even == false)`, use `if (!even)`.</li>
+                 <li><strong>Comparing Floating-Point Numbers for Exact Equality:</strong> Due to precision issues, `x == y` might be false even if `x` and `y` are mathematically equal. It's better to check if the absolute difference is very small: `Math.abs(x - y) < epsilon` (where epsilon is a tiny value like 1E-14).</li>
+             </ol>
+              <div class="tip">
+                  <h4>TIP: Simplifying Boolean Assignments</h4>
+                  <p>Instead of:</p>
+                  <pre><code>if (number % 2 == 0) {
+    even = true;
+} else {
+    even = false;
+}</code></pre>
+                  <p>You can directly assign the result of the boolean expression:</p>
+                  <pre><code>boolean even = (number % 2 == 0);</code></pre>
+              </div>
+        </section>
+
+         <section id="examples-bmi-taxes">
+            <h2>Examples Using Selection Statements</h2>
+            <h3>Problem: Body Mass Index (BMI)</h3>
+            <p>Calculate BMI (weight in kg / height in meters squared) and interpret the result based on standard categories.</p>
+            <pre><code>// --- Snippet ---
+// Assume bmi is calculated
+System.out.print("Your BMI is " + bmi + ". Interpretation: ");
+if (bmi < 18.5) {
+    System.out.println("Underweight");
+} else if (bmi < 25.0) {
+    System.out.println("Normal");
+} else if (bmi < 30.0) {
+    System.out.println("Overweight");
+} else {
+    System.out.println("Obese");
+}</code></pre>
+             <p>(Note: Run button on slide 131 is inactive.)</p>
+
+             <h3>Problem: Computing Taxes</h3>
+             <p>Calculate US federal income tax based on filing status (single, married joint, married separate, head of household) and taxable income, using tax brackets (example rates for 2009 shown on slide 132).</p>
+             <pre><code>// --- Structure Snippet ---
+// Get filing status and taxable income from user
+
+double tax = 0;
+
+if (status == 0) { // Single Filer
+    // Apply single filer tax brackets to income
+    if (income <= 8350) tax = income * 0.10;
+    else if (income <= 33950) tax = 8350 * 0.10 + (income - 8350) * 0.15;
+    // ... more brackets ...
+    else tax = /* calculations for highest bracket */;
+} else if (status == 1) { // Married Filing Jointly
+    // Apply married joint tax brackets...
+} else if (status == 2) { // Married Filing Separately
+    // Apply married separate tax brackets...
+} else if (status == 3) { // Head of Household
+    // Apply head of household tax brackets...
+} else {
+    System.out.println("Error: invalid status");
+    System.exit(1);
+}
+
+System.out.println("Tax is " + (int)(tax * 100) / 100.0); // Display tax</code></pre>
+              <p>(Note: Run button on slide 133 is inactive.)</p>
+
+         </section>
+
+        <section id="logical-operators">
+            <h2>Logical Operators</h2>
+            <p>Used to combine multiple boolean expressions.</p>
+            <table>
+                <thead>
+                    <tr><th>Operator</th><th>Name</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>!</code></td><td>NOT</td><td>Logical Negation (reverses boolean value)</td></tr>
+                    <tr><td><code>&&</code></td><td>AND</td><td>Logical Conjunction (true only if BOTH operands are true)</td></tr>
+                    <tr><td><code>||</code></td><td>OR</td><td>Logical Disjunction (true if AT LEAST ONE operand is true)</td></tr>
+                    <tr><td><code>^</code></td><td>XOR</td><td>Exclusive OR (true if operands are DIFFERENT, false if they are the same)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Truth Tables</h3>
+            <h4>Operator `!` (NOT)</h4>
+             <table><thead><tr><th>p</th><th>!p</th></tr></thead><tbody><tr><td>true</td><td>false</td></tr><tr><td>false</td><td>true</td></tr></tbody></table>
+             <p>Example: `! (age > 18)` is true if `age` is 18 or less.</p>
+
+            <h4>Operator `&&` (AND)</h4>
+            <table><thead><tr><th>p1</th><th>p2</th><th>p1 && p2</th></tr></thead><tbody><tr><td>false</td><td>false</td><td>false</td></tr><tr><td>false</td><td>true</td><td>false</td></tr><tr><td>true</td><td>false</td><td>false</td></tr><tr><td>true</td><td>true</td><td>true</td></tr></tbody></table>
+            <p>Example: `(age > 18) && (weight > 140)` is true only if both age is over 18 AND weight is over 140.</p>
+            <p><strong>Short-Circuit Evaluation:</strong> If `p1` is false, `p2` is NOT evaluated because the result must be false.</p>
+
+            <h4>Operator `||` (OR)</h4>
+             <table><thead><tr><th>p1</th><th>p2</th><th>p1 || p2</th></tr></thead><tbody><tr><td>false</td><td>false</td><td>false</td></tr><tr><td>false</td><td>true</td><td>true</td></tr><tr><td>true</td><td>false</td><td>true</td></tr><tr><td>true</td><td>true</td><td>true</td></tr></tbody></table>
+             <p>Example: `(age > 18) || (weight > 140)` is true if age is over 18 OR weight is over 140 (or both).</p>
+             <p><strong>Short-Circuit Evaluation:</strong> If `p1` is true, `p2` is NOT evaluated because the result must be true.</p>
+
+            <h4>Operator `^` (XOR)</h4>
+             <table><thead><tr><th>p1</th><th>p2</th><th>p1 ^ p2</th></tr></thead><tbody><tr><td>false</td><td>false</td><td>false</td></tr><tr><td>false</td><td>true</td><td>true</td></tr><tr><td>true</td><td>false</td><td>true</td></tr><tr><td>true</td><td>true</td><td>false</td></tr></tbody></table>
+             <p>Example: `(isMember ^ isGuest)` might be true if someone is either a member or a guest, but not both.</p>
+
+             <h3>Example: Divisibility Check</h3>
+             <pre><code>Scanner input = new Scanner(System.in);
+System.out.print("Enter an integer: ");
+int number = input.nextInt();
+
+// Check if divisible by 2 AND 3
+System.out.println("Is " + number + " divisible by 2 and 3? " +
+                   ((number % 2 == 0) && (number % 3 == 0)));
+
+// Check if divisible by 2 OR 3
+System.out.println("Is " + number + " divisible by 2 or 3? " +
+                   ((number % 2 == 0) || (number % 3 == 0)));
+
+// Check if divisible by 2 OR 3, but NOT BOTH (XOR)
+System.out.println("Is " + number + " divisible by 2 or 3, but not both? " +
+                   ((number % 2 == 0) ^ (number % 3 == 0)));
+input.close();</code></pre>
+            <p>(Note: Run button on slide 139/140 is inactive.)</p>
+
+             <div class="note">
+                 <h4>Non-Short-Circuit Operators: `&` and `|`</h4>
+                 <p>Java also has `&` (bitwise AND) and `|` (bitwise OR) operators. When used with boolean operands, they act like logical AND/OR but *without* short-circuiting. Both sides are always evaluated.</p>
+                 <p>Example (from slide 141): If `x` is 1:</p>
+                 <ul>
+                     <li><code>(x > 1) & (x++ < 10)</code>: `(x > 1)` is false. `(x++ < 10)` is evaluated (true, and x becomes 2). Result is `false & true` which is `false`. `x` becomes 2.</li>
+                     <li><code>(x > 1) && (x++ < 10)</code>: `(x > 1)` is false. The second part `(x++ < 10)` is *not* evaluated due to short-circuiting. Result is `false`. `x` remains 1.</li>
+                 </ul>
+                 <p>Generally, use `&&` and `||` for logical operations unless you specifically need the side effect of the second operand always being evaluated.</p>
+             </div>
+
+            <h3>Problem: Determining Leap Year</h3>
+            <p>A year is a leap year if it is divisible by 4 but not by 100, OR if it is divisible by 400.</p>
+            <pre><code>// Assume 'year' is an integer variable holding the year
+boolean isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+
+if (isLeapYear) {
+    System.out.println(year + " is a leap year.");
+} else {
+    System.out.println(year + " is not a leap year.");
+}</code></pre>
+             <p>(Note: Run button on slide 142 is inactive.)</p>
+
+             <h3>Problem: Lottery</h3>
+             <p>Generate a 2-digit lottery number. Prompt user for a 2-digit guess. Award based on matches:</p>
+             <ul>
+                 <li>Exact match (order matters): $10,000</li>
+                 <li>All digits match (order doesn't matter): $3,000</li>
+                 <li>One digit matches: $1,000</li>
+             </ul>
+             <pre><code>// --- Logic Snippet ---
+int lottery = (int)(Math.random() * 100); // Generate 0-99
+
+Scanner input = new Scanner(System.in);
+System.out.print("Enter your two-digit lottery pick: ");
+int guess = input.nextInt();
+
+// Get digits from lottery and guess
+int lotteryDigit1 = lottery / 10;
+int lotteryDigit2 = lottery % 10;
+int guessDigit1 = guess / 10;
+int guessDigit2 = guess % 10;
+
+System.out.println("The lottery number is " + lottery);
+
+// Check for exact match
+if (guess == lottery) {
+    System.out.println("Exact match: you win $10,000");
+} else if (guessDigit2 == lotteryDigit1 && guessDigit1 == lotteryDigit2) {
+    System.out.println("Match all digits: you win $3,000");
+} else if (guessDigit1 == lotteryDigit1 || guessDigit1 == lotteryDigit2 ||
+           guessDigit2 == lotteryDigit1 || guessDigit2 == lotteryDigit2) {
+    System.out.println("Match one digit: you win $1,000");
+} else {
+    System.out.println("Sorry, no match");
+}
+input.close();</code></pre>
+              <p>(Note: Run button on slide 143 is inactive.)</p>
+         </section>
+
+         <section id="switch-statement">
+             <h2>The `switch` Statement</h2>
+             <p>Executes statements based on the value of a variable or expression (the "switch expression"). It's an alternative to long `if-else if-else` chains for specific value checks.</p>
+             <pre><code>switch (switch-expression) {
+    case value1:
+        // Statement(s) for value1;
+        break; // Important: exits the switch
+    case value2:
+        // Statement(s) for value2;
+        break;
+    // ... more cases
+    case valueN:
+        // Statement(s) for valueN;
+        break;
+    default: // Optional: executes if no case matches
+        // Statement(s) for default case;
+        // No break needed here, but can be included
+}</code></pre>
+            <h4>Switch Statement Rules:</h4>
+            <ul>
+                <li>The `switch-expression` must evaluate to `char`, `byte`, `short`, `int`, or `String` (since Java 7). (Also `enum` types).</li>
+                <li>`value1`, `value2`, ..., `valueN` must be constant expressions (literals or `final` variables initialized with literals) of the same data type as the `switch-expression`. They cannot be variables.</li>
+                 <li>Duplicate case values are not allowed.</li>
+                 <li>The `default` case is optional. If present, it executes if none of the other cases match.</li>
+                 <li>The `break` statement is crucial. Without `break`, execution "falls through" to the next case's statements until a `break` or the end of the `switch` is reached. This is sometimes intentional but often a source of errors if forgotten.</li>
+             </ul>
+              <h4>Example: Tax Status</h4>
+              <pre><code>// Assume status is an int: 0=single, 1=joint, 2=separate, 3=head
+switch (status) {
+    case 0:
+        System.out.println("Computing tax for single filers");
+        // compute taxes for single filers...
+        break;
+    case 1:
+        System.out.println("Computing tax for married file jointly");
+        // compute taxes for married file jointly...
+        break;
+    case 2:
+        System.out.println("Computing tax for married file separately");
+        // compute taxes for married file separately...
+        break;
+    case 3:
+        System.out.println("Computing tax for head of household");
+        // compute taxes for head of household...
+        break;
+    default:
+        System.out.println("Errors: invalid status");
+        System.exit(1);
+}</code></pre>
+             <figure>
+                <img src="page_145.jpg" alt="Flowchart for switch statement" style="max-width: 70%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">`switch` Statement Flowchart (Tax Example)</figcaption>
+            </figure>
+            <h4>Trace Example (Fall-through):</h4>
+            <pre><code>int day = 2; // Tuesday
+switch (day) {
+    case 1: // Monday
+    case 2: // Tuesday (Matches here)
+    case 3: // Wednesday (Falls through)
+    case 4: // Thursday (Falls through)
+    case 5: // Friday (Falls through)
+        System.out.println("Weekday");
+        break; // Exits here
+    case 0: // Sunday
+    case 6: // Saturday
+        System.out.println("Weekend");
+}
+// Output: Weekday</code></pre>
+
+              <h3>Problem: Chinese Zodiac</h3>
+              <p>Determine the Chinese Zodiac animal based on the year. The cycle repeats every 12 years. `year % 12` gives a value from 0 to 11.</p>
+              <pre><code>// Assume 'year' is entered by the user
+int zodiacIndex = year % 12;
+String animal = "";
+
+switch (zodiacIndex) {
+    case 0: animal = "monkey"; break;
+    case 1: animal = "rooster"; break;
+    case 2: animal = "dog"; break;
+    case 3: animal = "pig"; break;
+    case 4: animal = "rat"; break;
+    case 5: animal = "ox"; break;
+    case 6: animal = "tiger"; break;
+    case 7: animal = "rabbit"; break;
+    case 8: animal = "dragon"; break;
+    case 9: animal = "snake"; break;
+    case 10: animal = "horse"; break;
+    case 11: animal = "sheep"; break;
+}
+System.out.println(year + " is the year of the " + animal);</code></pre>
+              <p>(Note: Run button on slide 155 is inactive.)</p>
+         </section>
+
+         <section id="conditional-operator">
+             <h2>Conditional Operator (Ternary Operator)</h2>
+             <p>A shorthand way to write simple `if-else` statements that assign a value based on a condition.</p>
+             <p>Syntax: <code>boolean-expression ? expression1 : expression2</code></p>
+             <ul>
+                 <li>If `boolean-expression` is true, the entire expression evaluates to `expression1`.</li>
+                 <li>If `boolean-expression` is false, the entire expression evaluates to `expression2`.</li>
+             </ul>
+             <h4>Example:</h4>
+              <pre><code>// Using if-else:
+if (x > 0) {
+    y = 1;
+} else {
+    y = -1;
+}
+
+// Equivalent using conditional operator:
+y = (x > 0) ? 1 : -1;
+
+// Another example:
+System.out.println((num % 2 == 0) ? num + " is even" : num + " is odd");
+</code></pre>
+              <p>`expression1` and `expression2` must be assignment-compatible with the variable receiving the result (like `y` above) or usable in the context (like `println` above).</p>
+         </section>
+
+          <section id="precedence-associativity">
+            <h2>Operator Precedence and Associativity (Review)</h2>
+            <p>Determines the order in which operators are evaluated in an expression.</p>
+            <h4>Precedence Order (Highest to Lowest - partial list from slide 159):</h4>
+            <ol>
+                <li>`()` (Parentheses)</li>
+                 <li>`++var`, `--var` (Prefix Increment/Decrement), `+` `-` (Unary), `(type)` (Casting), `!` (NOT)</li>
+                 <li>`*`, `/`, `%` (Multiplication, Division, Remainder)</li>
+                 <li>`+`, `-` (Binary Addition, Subtraction)</li>
+                 <li>`<`, `<=`, `>`, `>=` (Relational)</li>
+                 <li>`==`, `!=` (Equality)</li>
+                 <li>`^` (Bitwise/Boolean XOR)</li>
+                 <li>`&&` (Logical AND - short-circuit)</li>
+                 <li>`||` (Logical OR - short-circuit)</li>
+                 <li>`?:` (Conditional/Ternary Operator)</li>
+                 <li>`=`, `+=`, `-=`, `*=`, `/=`, `%=` (Assignment Operators)</li>
+                 <li>`var++`, `var--` (Postfix Increment/Decrement - lower than prefix)</li>
+            </ol>
+            <h4>Associativity:</h4>
+            <ul>
+                <li>Determines order when operators have the same precedence.</li>
+                <li>Most binary operators (like `+`, `-`, `*`, `/`, `&&`, `||`) are <strong>left-associative</strong> (evaluated left to right).
+                    <br><code>a - b + c</code> is evaluated as <code>(a - b) + c</code>.</li>
+                <li>Assignment operators (`=`, `+=`, etc.) and the conditional operator (`?:`) are <strong>right-associative</strong> (evaluated right to left).
+                    <br><code>a = b += c = 5</code> is evaluated as <code>a = (b += (c = 5))</code>.</li>
+            </ul>
+             <h4>Example Evaluation (Slide 162):</h4>
+             <pre><code>   3 + 4 * 4 > 5 * (4 + 3) - 1
+=> 3 + 4 * 4 > 5 * 7 - 1        // Parentheses
+=> 3 + 16 > 5 * 7 - 1          // Multiplication (*) left-to-right
+=> 3 + 16 > 35 - 1            // Multiplication (*)
+=> 19 > 35 - 1                // Addition (+) left-to-right
+=> 19 > 34                   // Subtraction (-)
+=> false                      // Greater than (>)</code></pre>
+         </section>
+
+
+        <div class="navigation">
+            <a href="lecture1.html">&laquo; Previous Lecture (Chapters 1&2)</a>
+            <a href="lecture3.html">Next Lecture (Chapter 4) &raquo;</a>
+        </div>
+         <div class="navigation" style="margin-top: 10px; justify-content: center;">
+            <a href="index.html">Back to Index</a>
+        </div>
+    </div>
+</body>
+</html>

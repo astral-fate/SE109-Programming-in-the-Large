@@ -1,0 +1,679 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE109 - Lecture 1: Intro & Elementary Programming (Ch 1 & 2)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Lecture 1: Introduction & Elementary Programming</h1>
+        <p class="lecture-number">Covers Textbook Chapters 1 & 2</p>
+
+        <section id="intro">
+            <h2>What Does "Programming In The Large" Mean?</h2>
+
+            <h3>What Is Programming?</h3>
+            <ul>
+                <li>The stem of the word “programming” is “program”.</li>
+                <li>A program is simply a list of <em>unambiguous</em> instructions meant to be followed one-by-one by a computer.</li>
+                <li>Computer programs, known as <strong>software</strong>, tell the computer how to do what is required.</li>
+                <li>Without programs, a computer is an idle useless machine.</li>
+                <li>Computers do not understand human languages, so you need to use computer languages to communicate with them.</li>
+                <li>Programs are written using programming languages.</li>
+            </ul>
+
+            <h3>Programming In The Small vs. In The Large</h3>
+            <p>In software engineering, there are two different approaches to writing software:</p>
+
+            <h4>Programming In The Small:</h4>
+            <ul>
+                <li>An individual program is created to do one relatively simple task (access to local resources like files, databases, etc.).</li>
+                <li>Easy to specify, quick to code, and small in code size.</li>
+                <li>Often uses a loosely-typed scripting language over a strictly-typed programming language.</li>
+                <li>Rapid application development is often more important than stability.</li>
+                <li>Probably coded by a single programmer.</li>
+                <li>Ready to run on the system it was developed on.</li>
+            </ul>
+
+            <h4>Programming In The Large:</h4>
+            <ul>
+                <li>Programming a complicated system project.</li>
+                <li>The project is likely split into several (or hundreds of) separate programs, challenging to understand as a whole.</li>
+                <li>Typified by medium or large-sized teams working for months or years.</li>
+                <li>Each team is responsible for creating a program and defining its interface to surrounding programs.</li>
+                <li>Prefers strictly-typed programming languages over loosely-typed scripting languages.</li>
+                <li>Stability and fault-tolerance are more important than rapid application development, emphasizing careful planning and documentation.</li>
+            </ul>
+        </section>
+
+        <section id="motivation-objective">
+             <h2>Course Motivation & Objective</h2>
+             <p><strong>Motivation:</strong> Learn students to be professional developers of large-scale systems software. "Professional developers" implies high-skilled programmers.</p>
+             <p>The state-of-the-art paradigm for programming large systems software is <strong>object-oriented programming (OOP)</strong>.</p>
+             <p><strong>Objective:</strong> This course aims to introduce students to object-oriented programming (OOP) thinking, and in particular to write large-scale programs in a pure OOP language like <strong>Java</strong>.</p>
+        </section>
+
+        <section id="why-java">
+            <h2>Why Java?</h2>
+            <p>Java is used to develop platform (operating system)-independent applications:</p>
+            <ol>
+                <li><strong>Standalone Applications:</strong> Console and window-based applications.</li>
+                <li><strong>Applets:</strong> Applications running from a browser (front-end). (Less common now)</li>
+                <li><strong>Web Applications:</strong> Running on a web server (back-end).</li>
+                <li><strong>Enterprise Applications:</strong> Distributed, with advantages in networking, threading, security, load balancing (e.g., banking applications).</li>
+                <li><strong>Mobile and Embedded Applications:</strong> Run on hand-held and electronic devices (e.g., Android).</li>
+            </ol>
+
+            <h3>Key Features of Java:</h3>
+            <ul>
+                <li><strong>Object-Oriented:</strong> The basic program in Java must be within a class.</li>
+                <li><strong>Portable:</strong> Ability to run on any platform (software or hardware) without changing the source code ("Write Once, Run Anywhere").</li>
+                <li><strong>Secure:</strong> Built-in features verify that programs don't perform destructive tasks (like accessing remote files without permission). Compiled Bytecode is strongly type-checked.</li>
+                <li><strong>High-Level Programming Language:</strong> Syntax similar to C++.</li>
+                <li><strong>Simple:</strong> Automatic memory management (garbage collection) via the JVM.</li>
+                <li><strong>Distributed:</strong> Designed for network environments, supporting protocols like TCP/IP.</li>
+            </ul>
+             <p><em>(Note: Slides 11-17 show IEEE Spectrum rankings from 2023, placing Python often first overall, but highlighting Java's continued importance, especially for jobs requiring robust architectures alongside other languages like SQL. Java is described as moving away from being a monoculture but still crucial for high-performance or resource-sensitive tasks where Python might be too costly.)</em></p>
+             <h3>Java vs. JavaScript</h3>
+             <ul>
+                 <li><strong>Origin:</strong> Java by Sun Microsystems (now Oracle), JavaScript by Netscape (Mozilla).</li>
+                 <li><strong>Purpose:</strong> Java is a general-purpose language (Android, desktop, enterprise, web back-end). JavaScript is primarily a special-purpose scripting language for making web pages interactive (front-end), though Node.js allows back-end use.</li>
+                 <li><strong>Compilation:</strong> Java is compiled to bytecode then interpreted. JavaScript is typically interpreted (though JIT compilation exists). Both support OOP.</li>
+                 <li><strong>Typing:</strong> Java is <strong>statically-typed</strong> (types checked at compile time). JavaScript is <strong>dynamically-typed</strong> (types checked at runtime).</li>
+                 <li><strong>Namespaces:</strong> Java uses packages. JavaScript traditionally did not have native namespaces (modules serve a similar purpose now).</li>
+                 <li><strong>Web Role:</strong> Java often used for server-side logic. JavaScript used for client-side validation and interactivity.</li>
+             </ul>
+        </section>
+
+        <section id="java-platform">
+            <h2>The Java Platform: JDK, JRE, JVM</h2>
+            <ul>
+                <li><strong>Platform:</strong> Any hardware or software environment where a program runs.</li>
+                <li><strong>Java Platform Components:</strong>
+                    <ul>
+                        <li><strong>JDK (Java Developer Kit):</strong> Needed to <em>compile</em> Java source code (.java files). It is platform-specific (installers for Windows, Mac, Linux). Includes the JRE.</li>
+                        <li><strong>JRE (Java Runtime Environment):</strong> Needed to <em>run</em> compiled Java programs (.class files). Includes the JVM. You don't need the full JDK just to run Java applications.</li>
+                        <li><strong>JVM (Java Virtual Machine):</strong> Part of the JRE. It is platform-specific. It interprets the intermediate Bytecode into machine-specific code and executes it. It provides the platform independence ("virtual").</li>
+                    </ul>
+                </li>
+                 <li><strong>Is Java Compiled or Interpreted?</strong> Both.
+                     <ol>
+                         <li>Java source code (.java) is <strong>compiled</strong> by the Java compiler (part of JDK) into platform-neutral <strong>Bytecode</strong> (.class).</li>
+                         <li>The Bytecode (.class) is then <strong>interpreted</strong> (or Just-In-Time compiled) by the JVM (part of JRE) into native machine code for the specific operating system and hardware it's running on.</li>
+                     </ol>
+                     This is the "Write Once, Run Anywhere" mechanism. The same .class file can run on any machine with a compatible JRE/JVM.
+                 </li>
+                 <li><strong>JVM Interface:</strong> The JVM acts as an abstract layer, hiding the underlying OS and hardware details from the Java program.</li>
+             </ul>
+             <figure>
+                <img src="page_36.jpg" alt="Diagram showing Java Program -> Compiler -> Java Bytecode Program -> Java Interpreter (for Mac, Windows, Linux)" style="max-width: 80%; display: block; margin: 15px auto;">
+                <figcaption class="figure-description">Java Compile/Interpret Process (Conceptual)</figcaption>
+            </figure>
+             <figure>
+                <img src="page_37.jpg" alt="Diagram showing HelloWorldApp.java -> Compiler -> HelloWorldApp.class -> JVM on Win32/UNIX/MacOS" style="max-width: 90%; display: block; margin: 15px auto;">
+                <figcaption class="figure-description">Platform Independence via JVM</figcaption>
+            </figure>
+
+            <h3>JDK Editions</h3>
+            <ul>
+                <li><strong>Java Standard Edition (J2SE / Java SE):</strong> Used for client-side standalone applications (desktop) and applets. *This course uses J2SE.*</li>
+                <li><strong>Java Enterprise Edition (J2EE / Java EE / Jakarta EE):</strong> Used for server-side applications (e.g., servlets, Java Server Pages (JSP), Java Server Faces (JSF)).</li>
+                <li><strong>Java Micro Edition (J2ME / Java ME):</strong> Used for applications on mobile/embedded devices (less common now with Android/Java SE Subset).</li>
+            </ul>
+
+             <h3>Popular Java IDEs</h3>
+             <ul>
+                 <li>NetBeans</li>
+                 <li>Eclipse</li>
+                 <li>IntelliJ IDEA</li>
+             </ul>
+              <figure>
+                 <img src="page_41.jpg" alt="Logos for NetBeans, Eclipse, IntelliJ IDEA" style="max-width: 70%; display: block; margin: 15px auto;">
+             </figure>
+
+        </section>
+
+         <!-- CHAPTER 1 CONTENT START -->
+         <section id="chapter1">
+            <h2>Chapter 1: Introduction to Computers, Programs, and Java™</h2>
+
+            <h3>Programming Languages History</h3>
+            <h4>Machine Language</h4>
+            <ul>
+                <li>A set of primitive instructions built into every computer.</li>
+                <li>Instructions are in binary code (0s and 1s).</li>
+                <li>Programming is tedious and programs are highly difficult to read and modify.</li>
+                <li>Example (adding two numbers might look like): <code>1101101010011010</code></li>
+            </ul>
+
+            <h4>Assembly Language</h4>
+            <ul>
+                <li>Developed to make programming easier using mnemonics (short descriptive words).</li>
+                <li>An <strong>assembler</strong> program translates assembly code into machine code.</li>
+                <li>Example: <code>ADDF3 R1, R2, R3</code> (add R1 and R2, store result in R3)</li>
+                <li>Still low-level and machine-dependent.</li>
+                 <figure>
+                    <img src="page_27.jpg" alt="Diagram: Assembly Source File -> Assembler -> Machine-Code File" style="max-width: 80%; display: block; margin: 15px auto;">
+                </figure>
+            </ul>
+
+            <h4>High-Level Language</h4>
+            <ul>
+                <li>English-like and easy to learn and program.</li>
+                <li>A <strong>compiler</strong> or <strong>interpreter</strong> translates high-level code into machine code.</li>
+                <li>Example: <code>area = 5 * 5 * 3.1415;</code></li>
+                <li>Platform-independent (mostly).</li>
+            </ul>
+
+            <h4>Popular High-Level Languages (Summary Table)</h4>
+            <table>
+                <thead>
+                    <tr><th>Language</th><th>Description Summary</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Ada</td><td>Developed for Dept. of Defense, used in defense projects.</td></tr>
+                    <tr><td>BASIC</td><td>Beginner’s language, easy to learn.</td></tr>
+                    <tr><td>C</td><td>Developed at Bell Labs. Combines assembly power with high-level ease/portability.</td></tr>
+                    <tr><td>C++</td><td>Object-oriented language based on C.</td></tr>
+                    <tr><td>C#</td><td>Hybrid of Java/C++, developed by Microsoft.</td></tr>
+                    <tr><td>COBOL</td><td>Used for business applications.</td></tr>
+                    <tr><td>FORTRAN</td><td>Popular for scientific and mathematical applications.</td></tr>
+                    <tr><td>Java</td><td>Developed by Sun (now Oracle). Widely used for platform-independent Internet applications.</td></tr>
+                    <tr><td>Pascal</td><td>Simple, structured language, good for teaching.</td></tr>
+                    <tr><td>Python</td><td>Simple general-purpose scripting language, good for short programs (and much more now).</td></tr>
+                    <tr><td>Visual Basic</td><td>Microsoft language for rapid GUI development.</td></tr>
+                 </tbody>
+            </table>
+
+            <h3>Interpreting/Compiling Source Code</h3>
+            <ul>
+                <li>A program written in a high-level language is called <strong>source code</strong> (or source program).</li>
+                <li>Source code must be translated into machine code for the computer to execute.</li>
+                <li>Translation is done by an <strong>interpreter</strong> or a <strong>compiler</strong>.</li>
+            </ul>
+            <h4>Interpreter</h4>
+            <ul>
+                <li>Reads one statement from source code, translates it to machine code, executes it immediately.</li>
+                <li>Repeats for each statement.</li>
+                <li>A source statement might translate to several machine instructions.</li>
+                  <figure>
+                    <img src="page_31.jpg" alt="Diagram: High-Level Source File -> Interpreter -> Output" style="max-width: 80%; display: block; margin: 15px auto;">
+                </figure>
+            </ul>
+            <h4>Compiler</h4>
+            <ul>
+                <li>Translates the <em>entire</em> source code into a machine-code file (object file/executable).</li>
+                <li>The machine-code file is then executed separately.</li>
+                <figure>
+                    <img src="page_32.jpg" alt="Diagram: High-Level Source File -> Compiler -> Machine-Code File -> Executor -> Output" style="max-width: 80%; display: block; margin: 15px auto;">
+                </figure>
+            </ul>
+            <h4>Compiler vs. Interpreter Comparison</h4>
+             <table>
+                 <thead><tr><th>Compiler</th><th>Interpreter</th></tr></thead>
+                 <tbody>
+                     <tr><td>Reads the whole program at time.</td><td>Reads the program line by line.</td></tr>
+                     <tr><td>Translates the whole program at a time into machine code.</td><td>Translates only one line of program at a time into machine code.</td></tr>
+                     <tr><td>Produces machine code which is directly understood by computer.</td><td>Produces intermediate code after translation.</td></tr>
+                     <tr><td>Takes large amount of time to analyze the source code.</td><td>Takes less amount of time to analyze the source code.</td></tr>
+                     <tr><td>Is faster (execution).</td><td>Is slower (execution).</td></tr>
+                     <tr><td>Requires more memory space.</td><td>Requires less memory space.</td></tr>
+                     <tr><td>Is good for professionals.</td><td>Is good for beginners.</td></tr>
+                     <tr><td>Programming languages like C, C++ use compiler.</td><td>Programming languages like Python, Ruby use interpreter. (Note: Java uses both)</td></tr>
+                 </tbody>
+             </table>
+            <p><em>(Note: As discussed earlier, Java uses a combination: compile to bytecode, then interpret/JIT compile bytecode.)</em></p>
+
+            <h3>A Simple Java Program</h3>
+            <pre><code>// Listing 1.1
+// This program prints Welcome to Java!
+public class Welcome {
+    public static void main(String[] args) {
+        System.out.println("Welcome to Java!");
+    }
+}
+</code></pre>
+             <p>(Note: Run/Animation buttons on slide 42 are inactive here.)</p>
+
+            <h3>Creating, Compiling, and Executing a Java Program</h3>
+             <ol>
+                 <li><strong>Create/Edit Source Code:</strong> Use a text editor (like NotePad, WordPad - slide 43/44 examples) or an IDE (like Eclipse, NetBeans - mentioned later) to write the program and save it as `FileName.java` (e.g., `Welcome.java`). The file name must match the public class name.</li>
+                 <li><strong>Compile:</strong> Use the Java compiler (javac) from the JDK to translate the source code into bytecode. From the command line:
+                    <pre><code>javac Welcome.java</code></pre>
+                    This creates a `Welcome.class` file containing bytecode. If there are syntax errors, the compiler will report them.
+                 </li>
+                 <li><strong>Run:</strong> Use the Java Virtual Machine (java command from the JRE/JDK) to interpret/run the bytecode:
+                      <pre><code>java Welcome</code></pre>
+                      (Note: Do not include the `.class` extension). The JVM loads the class and executes its `main` method. Runtime errors might occur here.
+                 </li>
+             </ol>
+             <figure>
+                <img src="page_45.jpg" alt="Diagram showing Create/Modify Source -> Compile -> Bytecode -> Run -> Result" style="max-width: 90%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">Java Program Development Cycle</figcaption>
+            </figure>
+             <figure>
+                <img src="page_46.jpg" alt="Diagram comparing compiling C/C++ vs Java" style="max-width: 90%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">Java Bytecode and JVM Portability Concept</figcaption>
+            </figure>
+
+             <h4>Trace Program Execution (Welcome.java)</h4>
+             <ol>
+                 <li>Enter `main` method (Starts execution).</li>
+                 <li>Execute statement: `System.out.println("Welcome to Java!");`</li>
+                 <li>Print the message "Welcome to Java!" to the console.</li>
+                 <li>Exit `main` method.</li>
+             </ol>
+
+            <h3>Anatomy of a Java Program</h3>
+            <pre><code>// This program prints Welcome to Java! (Comment)
+public class Welcome { // Class definition (Class Name: Welcome)
+
+    // Main method - entry point
+    public static void main(String[] args) { // Method header
+
+        // Statement to print output
+        System.out.println("Welcome to Java!"); // Statement ends with ; (Terminator)
+
+    } // End of main method block
+} // End of class block
+// public, static, void, class are Reserved Words (Keywords)
+// { } define Blocks
+</code></pre>
+            <ul>
+                <li><strong>Class name:</strong> Every Java program must have at least one class. Conventionally, class names start with an uppercase letter (e.g., `Welcome`).</li>
+                <li><strong>Main method:</strong> The entry point for execution. Must have the signature `public static void main(String[] args)`.</li>
+                <li><strong>Statement:</strong> Represents an action or sequence of actions (e.g., `System.out.println(...)`).</li>
+                <li><strong>Statement terminator:</strong> Every statement ends with a semicolon (`;`).</li>
+                <li><strong>Reserved words (Keywords):</strong> Words with specific meaning to the compiler (e.g., `public`, `static`, `void`, `class`, `int`). Cannot be used for other purposes like variable names.</li>
+                <li><strong>Comments:</strong> Ignored by the compiler, used for explanations. `//` for single-line, `/* ... */` for multi-line.</li>
+                <li><strong>Blocks:</strong> Code enclosed in braces `{}`. Groups components. A class has a block, a method has a block.</li>
+            </ul>
+             <h4>Special Symbols</h4>
+             <table>
+                 <thead><tr><th>Character</th><th>Name</th><th>Description</th></tr></thead>
+                 <tbody>
+                     <tr><td><code>{}</code></td><td>Braces</td><td>Denotes a block to enclose statements.</td></tr>
+                     <tr><td><code>()</code></td><td>Parentheses</td><td>Used with methods (for parameters) and controlling expression evaluation.</td></tr>
+                     <tr><td><code>[]</code></td><td>Brackets</td><td>Denotes an array.</td></tr>
+                     <tr><td><code>//</code></td><td>Double slashes</td><td>Precedes a single-line comment.</td></tr>
+                     <tr><td><code>" "</code></td><td>Quotation marks</td><td>Enclosing a string literal (sequence of characters).</td></tr>
+                     <tr><td><code>;</code></td><td>Semicolon</td><td>Marks the end of a statement.</td></tr>
+                 </tbody>
+             </table>
+
+            <h3>Programming Style and Documentation</h3>
+            <ul>
+                <li><strong>Appropriate Comments:</strong> Include summaries, explain complex logic, identify authors/dates.</li>
+                <li><strong>Naming Conventions:</strong> Use meaningful names.
+                    <ul>
+                        <li>Classes: Capitalize the first letter of each word (e.g., `ComputeExpression`).</li>
+                        <li>Methods & Variables: Use lowercase for the first word, capitalize the first letter of subsequent words (camelCase) (e.g., `computeArea`, `radius`).</li>
+                        <li>Constants: Capitalize all letters, use underscore `_` to separate words (e.g., `MAX_VALUE`, `PI`).</li>
+                    </ul>
+                </li>
+                <li><strong>Proper Indentation and Spacing:</strong> Indent code within blocks (e.g., 2 or 4 spaces). Use blank lines to separate segments.</li>
+                <li><strong>Block Styles:</strong>
+                    <ul>
+                        <li><em>End-of-line style (preferred):</em> Opening brace `{` on the same line as the statement.</li>
+                        <pre><code>public class Test {
+    public static void main(String[] args) {
+        // ...
+    }
+}</code></pre>
+                        <li><em>Next-line style:</em> Opening brace `{` on a new line.</li>
+                        <pre><code>public class Test
+{
+    public static void main(String[] args)
+    {
+        // ...
+    }
+}</code></pre>
+                    </ul>
+                 </li>
+            </ul>
+
+            <h3>Programming Errors</h3>
+            <ul>
+                <li><strong>Syntax Errors (Compile Errors):</strong> Detected by the compiler. Violations of language rules (e.g., missing semicolon, misspelled keyword). Program won't compile.
+                    <pre><code>public class ShowSyntaxErrors {
+    // Missing void in main signature, missing quotes in println
+    public static main(String[] args) {
+        System.out.println("Welcome to Java);
+    }
+}</code></pre>
+                </li>
+                <li><strong>Runtime Errors:</strong> Occur during execution. Cause the program to abort (crash). Examples: division by zero, accessing invalid array index.
+                     <pre><code>public class ShowRuntimeErrors {
+    public static void main(String[] args) {
+        System.out.println(1 / 0); // ArithmeticException: / by zero
+    }
+}</code></pre>
+                </li>
+                <li><strong>Logic Errors:</strong> Program compiles and runs, but produces incorrect results. Caused by flaws in the program's logic. Hardest to find.
+                    <pre><code>public class ShowLogicErrors {
+    // Incorrect formula for Celsius to Fahrenheit conversion
+    public static void main(String[] args) {
+        System.out.println("Celsius 35 is Fahrenheit degree ");
+        // Problem: 9 / 5 performs integer division (result is 1)
+        System.out.println((9 / 5) * 35 + 32); // Prints 1*35+32 = 67, should be 95
+        // Correct: System.out.println((9.0 / 5) * 35 + 32);
+    }
+}</code></pre>
+                </li>
+            </ul>
+             <p>(Note: Error examples on slides 72-74 show code and mention 'Run' buttons, which are inactive here.)</p>
+
+         </section> <!-- End Chapter 1 -->
+
+         <!-- CHAPTER 2 CONTENT START -->
+         <section id="chapter2">
+            <h2>Chapter 2: Elementary Programming</h2>
+
+            <h3>Motivations</h3>
+            <p>This chapter focuses on solving practical problems programmatically. We will learn Java's primitive data types, variables, constants, operators, expressions, and console input/output.</p>
+
+            <h3>Objectives (Summary from Slide 77)</h3>
+            <p>Key objectives include: performing simple computations, getting console input (Scanner), using identifiers, variables, assignments, constants, naming conventions, numeric types (byte, short, int, long, float, double), operators, Math.pow, literals, expression evaluation, type casting, and avoiding common errors.</p>
+
+            <h3>Writing a Simple Program (Example: Compute Area)</h3>
+            <pre><code>// Listing 2.1 ComputeArea
+import java.util.Scanner; // Needed for console input later
+
+public class ComputeArea {
+    public static void main(String[] args) {
+        double radius; // Declare radius
+        double area;   // Declare area
+
+        // Step 1: Assign a radius (Hardcoded example)
+        radius = 20;
+
+        // Step 2: Compute area
+        area = radius * radius * 3.14159;
+
+        // Step 3: Display results
+        System.out.println("The area for the circle of radius " +
+            radius + " is " + area);
+    }
+}
+</code></pre>
+            <p>(Note: Run/Animation buttons on slide 78 are inactive.)</p>
+            <h4>Trace Program Execution (ComputeArea.java)</h4>
+             <ol>
+                 <li>Declare `radius` (memory allocated, no value initially).</li>
+                 <li>Declare `area` (memory allocated, no value initially).</li>
+                 <li>Assign 20 to `radius`.</li>
+                 <li>Compute `area` (20 * 20 * 3.14159 = 1256.636) and assign to `area`.</li>
+                 <li>Print the message with the values of `radius` and `area` to the console.</li>
+             </ol>
+
+             <h3>Reading Input from the Console</h3>
+             <p>Use the `java.util.Scanner` class:</p>
+             <ol>
+                 <li><strong>Import Scanner:</strong> Add `import java.util.Scanner;` at the top of your file.</li>
+                 <li><strong>Create a Scanner object:</strong>
+                    <pre><code>Scanner input = new Scanner(System.in);</code></pre>
+                    `(System.in)` specifies standard input (keyboard).
+                 </li>
+                 <li><strong>Use Scanner methods to read input:</strong>
+                     <ul>
+                         <li>`nextDouble()`: Reads a double value.</li>
+                         <li>`nextInt()`: Reads an int value.</li>
+                         <li>`nextByte()`, `nextShort()`, `nextLong()`, `nextFloat()`: Read corresponding types.</li>
+                         <li>`next()`: Reads a string delimited by whitespace.</li>
+                         <li>`nextLine()`: Reads the entire line of text.</li>
+                     </ul>
+                 </li>
+             </ol>
+             <h4>Example: Compute Area with Console Input</h4>
+             <pre><code>import java.util.Scanner; // Step 1: Import
+
+public class ComputeAreaWithConsoleInput {
+    public static void main(String[] args) {
+        // Step 2: Create a Scanner object
+        Scanner input = new Scanner(System.in);
+
+        // Step 3: Prompt the user to enter a radius
+        System.out.print("Enter a number for radius: ");
+        double radius = input.nextDouble(); // Step 4: Read input
+
+        // Step 5: Compute area
+        double area = radius * radius * 3.14159;
+
+        // Step 6: Display results
+        System.out.println("The area for the circle of radius " +
+            radius + " is " + area);
+
+        input.close(); // Optional: Close the scanner when done
+    }
+}</code></pre>
+             <p>(Note: Run/Animation buttons on slide 84 are inactive.)</p>
+
+
+             <h3>Identifiers</h3>
+             <ul>
+                 <li>Names for variables, methods, classes, etc.</li>
+                 <li>A sequence of characters: letters, digits, underscores (`_`), dollar signs (`$`).</li>
+                 <li>Must start with a letter, underscore, or dollar sign. <strong>Cannot start with a digit.</strong></li>
+                 <li>Cannot be a reserved word (keyword like `public`, `class`, `int`).</li>
+                 <li>Cannot be `true`, `false`, or `null`.</li>
+                 <li>Are case-sensitive (`radius` is different from `Radius`).</li>
+                 <li>Can be of any length.</li>
+                 <li>Convention: Use descriptive names (e.g., `radius`, `computeArea` instead of `r`, `c`).</li>
+             </ul>
+
+            <h3>Variables</h3>
+            <ul>
+                <li>Represent memory locations used to store values.</li>
+                <li>Must be declared with a data type before use.</li>
+                 <li>Declaration Syntax: `datatype variableName;`
+                    <pre><code>int count;
+double radius;
+char letter;</code></pre>
+                 </li>
+                 <li>Can be used to store changing values during program execution.</li>
+                 <pre><code>// Example showing variable use
+double radius;
+double area;
+
+// Compute the first area
+radius = 1.0;
+area = radius * radius * 3.14159;
+System.out.println("The area for radius " + radius + " is " + area);
+
+// Compute the second area (reuse variables)
+radius = 2.0;
+area = radius * radius * 3.14159;
+System.out.println("The area for radius " + radius + " is " + area);
+</code></pre>
+            </ul>
+
+            <h3>Assignment Statements and Expressions</h3>
+            <ul>
+                <li>Uses the assignment operator (`=`) to assign a value to a variable.</li>
+                <li>Syntax: `variable = expression;`</li>
+                 <pre><code>x = 1;          // Assign 1 to x
+radius = 1.0;   // Assign 1.0 to radius
+a = 'A';        // Assign 'A' to a
+sum = x + y;    // Assign the result of x + y to sum</code></pre>
+                 <li>The expression on the right is evaluated first, then the result is assigned to the variable on the left.</li>
+                 <li>The data type of the expression result must be compatible with the variable's data type.</li>
+                 <li>An assignment statement itself can be used as an expression (its value is the value assigned), e.g., `System.out.println(x = 1);` prints 1.</li>
+             </ul>
+              <h4>Declaring and Initializing in One Step</h4>
+              <pre><code>int x = 1;
+double d = 1.4;
+char grade = 'A';</code></pre>
+
+            <h3>Named Constants</h3>
+            <ul>
+                <li>Represent permanent data whose value cannot be changed.</li>
+                <li>Declared using the `final` keyword.</li>
+                <li>Syntax: `final datatype CONSTANT_NAME = value;`</li>
+                <li>Convention: Use all uppercase letters with underscores (`_`) separating words.</li>
+                 <li>Benefits: Prevents accidental modification, improves readability.</li>
+                <pre><code>final double PI = 3.14159;
+final int MAX_STUDENTS = 100;
+final int SIZE = 3;</code></pre>
+            </ul>
+
+             <h3>Naming Conventions (Recap)</h3>
+             <ul>
+                <li><strong>Classes:</strong> UpperCamelCase (e.g., `ComputeArea`).</li>
+                <li><strong>Methods & Variables:</strong> lowerCamelCase (e.g., `computeArea`, `radius`).</li>
+                <li><strong>Constants:</strong> ALL_CAPS_WITH_UNDERSCORES (e.g., `PI`, `MAX_VALUE`).</li>
+                <li>Choose meaningful and descriptive names.</li>
+             </ul>
+
+            <h3>Numeric Data Types and Operations</h3>
+            <h4>Primitive Numeric Types</h4>
+            <table>
+                 <thead><tr><th>Type</th><th>Storage Size</th><th>Range (Approximate)</th></tr></thead>
+                 <tbody>
+                     <tr><td><code>byte</code></td><td>8-bit signed</td><td>-128 to 127</td></tr>
+                     <tr><td><code>short</code></td><td>16-bit signed</td><td>-32,768 to 32,767</td></tr>
+                     <tr><td><code>int</code></td><td>32-bit signed</td><td>-2 billion to +2 billion</td></tr>
+                     <tr><td><code>long</code></td><td>64-bit signed</td><td>Very large range (-9 quintillion to +9 quintillion)</td></tr>
+                     <tr><td><code>float</code></td><td>32-bit IEEE 754</td><td>Approx. 6-7 decimal digits precision</td></tr>
+                     <tr><td><code>double</code></td><td>64-bit IEEE 754</td><td>Approx. 15 decimal digits precision (generally preferred for floating-point)</td></tr>
+                 </tbody>
+            </table>
+            <h4>Reading Numbers from Keyboard (Scanner Methods)</h4>
+             <table>
+                 <thead><tr><th>Method</th><th>Description</th></tr></thead>
+                 <tbody>
+                     <tr><td><code>nextByte()</code></td><td>reads a <code>byte</code> integer.</td></tr>
+                     <tr><td><code>nextShort()</code></td><td>reads a <code>short</code> integer.</td></tr>
+                     <tr><td><code>nextInt()</code></td><td>reads an <code>int</code> integer.</td></tr>
+                     <tr><td><code>nextLong()</code></td><td>reads a <code>long</code> integer.</td></tr>
+                     <tr><td><code>nextFloat()</code></td><td>reads a <code>float</code> number.</td></tr>
+                     <tr><td><code>nextDouble()</code></td><td>reads a <code>double</code> number.</td></tr>
+                 </tbody>
+             </table>
+              <h4>Numeric Operators</h4>
+               <table>
+                 <thead><tr><th>Operator</th><th>Name</th><th>Example</th><th>Result</th></tr></thead>
+                 <tbody>
+                     <tr><td><code>+</code></td><td>Addition</td><td><code>34 + 1</code></td><td><code>35</code></td></tr>
+                     <tr><td><code>-</code></td><td>Subtraction</td><td><code>34.0 - 0.1</code></td><td><code>33.9</code></td></tr>
+                     <tr><td><code>*</code></td><td>Multiplication</td><td><code>300 * 30</code></td><td><code>9000</code></td></tr>
+                     <tr><td><code>/</code></td><td>Division</td><td><code>1.0 / 2.0</code></td><td><code>0.5</code></td></tr>
+                     <tr><td><code>%</code></td><td>Remainder (Modulo)</td><td><code>20 % 3</code></td><td><code>2</code></td></tr>
+                 </tbody>
+            </table>
+            <h5>Integer Division</h5>
+            <ul>
+                <li>When dividing two integers, the result is an integer (the fractional part is truncated).</li>
+                <li>Example: <code>5 / 2</code> yields <code>2</code>.</li>
+                <li>If at least one operand is a floating-point number, the result is floating-point.</li>
+                <li>Example: <code>5.0 / 2</code> yields <code>2.5</code>.</li>
+            </ul>
+             <h5>Remainder Operator (%)</h5>
+             <ul>
+                 <li>Yields the remainder after integer division.</li>
+                 <li>Example: <code>5 % 2</code> yields <code>1</code>.</li>
+                 <li>Useful for determining even/odd numbers (<code>number % 2 == 0</code> means even).</li>
+                 <li>Also works with floating-point numbers.</li>
+             </ul>
+             <h4>Problem: Displaying Time</h4>
+             <p>Convert total seconds into minutes and remaining seconds.</p>
+             <pre><code>// Assume totalSeconds is given
+int minutes = totalSeconds / 60; // Integer division gives whole minutes
+int remainingSeconds = totalSeconds % 60; // Remainder gives leftover seconds
+System.out.println(totalSeconds + " seconds is " + minutes +
+                   " minutes and " + remainingSeconds + " seconds");
+</code></pre>
+             <p>(Note: Run button on slide 97 is inactive.)</p>
+
+             <div class="note">
+                 <h4>NOTE on Floating-Point Accuracy</h4>
+                 <p>Calculations involving floating-point numbers (<code>float</code>, <code>double</code>) can be approximate because these numbers are not always stored with complete accuracy in binary.</p>
+                 <ul>
+                    <li><code>System.out.println(1.0 - 0.1 - 0.1 - 0.1 - 0.1 - 0.1);</code> might display <code>0.5000000000000001</code>, not exactly 0.5.</li>
+                    <li><code>System.out.println(1.0 - 0.9);</code> might display <code>0.09999999999999998</code>, not exactly 0.1.</li>
+                 </ul>
+                  <p>Integers are stored precisely. Calculations with only integers yield precise integer results (within their range).</p>
+                  <p><strong>Avoid using floating-point numbers for equality checks in loop conditions or critical comparisons.</strong></p>
+             </div>
+
+              <h4>Exponent Operations</h4>
+              <p>Use the `Math.pow(a, b)` method (returns a `double`).</p>
+              <pre><code>System.out.println(Math.pow(2, 3));   // Displays 8.0 (2^3)
+System.out.println(Math.pow(4, 0.5)); // Displays 2.0 (sqrt(4))
+System.out.println(Math.pow(2.5, 2)); // Displays 6.25 (2.5^2)
+System.out.println(Math.pow(2.5, -2)); // Displays 0.16 (1 / 2.5^2)</code></pre>
+
+            <h3>Number Literals</h3>
+            <ul>
+                <li>A literal is a constant value written directly in the code.</li>
+                 <li>Examples: <code>34</code>, <code>1000000</code>, <code>5.0</code>, <code>'A'</code>, <code>"Hello"</code>.</li>
+                 <pre><code>int i = 34;         // 34 is an integer literal
+long x = 1000000;   // 1000000 is an integer literal (fits in int, treated as int by default)
+double d = 5.0;     // 5.0 is a double literal
+char c = 'A';       // 'A' is a character literal
+String s = "Hello"; // "Hello" is a string literal</code></pre>
+                <h4>Integer Literals</h4>
+                <ul>
+                    <li>By default, integer literals are treated as `int`.</li>
+                    <li>Can be assigned to `byte`, `short`, `int` if they fit within the type's range.</li>
+                    <li>Assignment to a smaller type where the value doesn't fit causes a compile error (e.g., `byte b = 1000;` is an error).</li>
+                    <li>To denote a `long` literal, append `L` or `l` (<code>L</code> is preferred to avoid confusion with `1`). Example: `long value = 12345678901L;`</li>
+                </ul>
+                 <h4>Floating-Point Literals</h4>
+                 <ul>
+                     <li>By default, floating-point literals (with a decimal point) are treated as `double`.</li>
+                     <li>Example: `5.0` is a `double` literal. Assigning `5.0` to a `float` variable directly causes an error without explicit casting or suffix.</li>
+                     <li>To denote a `float` literal, append `f` or `F`. Example: `float f = 100.2f;`</li>
+                     <li>To explicitly denote a `double` literal (usually optional), append `d` or `D`. Example: `double d = 100.2d;`</li>
+                     <li>`double` provides more precision than `float`.</li>
+                       <pre><code>System.out.println("1.0 / 3.0 is " + 1.0 / 3.0); // double division, more digits
+// Output: 1.0 / 3.0 is 0.3333333333333333
+System.out.println("1.0F / 3.0F is " + 1.0F / 3.0F); // float division, fewer digits
+// Output: 1.0F / 3.0F is 0.33333334</code></pre>
+                 </ul>
+                 <h4>Scientific Notation</h4>
+                 <ul>
+                     <li>Floating-point literals can use E-notation.</li>
+                     <li>Syntax: `mantissa E exponent` or `mantissa e exponent`</li>
+                     <li>Example: `1.23456e+2` or `1.23456e2` means 1.23456 * 10<sup>2</sup> = 123.456</li>
+                     <li>Example: `1.23456e-2` means 1.23456 * 10<sup>-2</sup> = 0.0123456</li>
+                 </ul>
+            </ul>
+
+            <h3>Evaluating Expressions and Operator Precedence</h3>
+            <ul>
+                <li>Java follows standard arithmetic rules for evaluating expressions.</li>
+                 <li>Operators have precedence levels (similar to PEMDAS/BODMAS).
+                     <ul>
+                         <li>Parentheses `()` have the highest precedence.</li>
+                         <li>Multiplication `*`, Division `/`, Remainder `%` are evaluated next (left-to-right).</li>
+                         <li>Addition `+`, Subtraction `-` are evaluated last (left-to-right).</li>
+                     </ul>
+                 </li>
+                 <li>Example Translation:
+                    <p>Arithmetic: <code>(3 + 4x) / 5 - 10(y - 5)(a + b + c) / x + 9(4 / x + (9 + x) / y)</code></p>
+                    <p>Java: <code>(3 + 4 * x) / 5 - 10 * (y - 5) * (a + b + c) / x + 9 * (4 / x + (9 + x) / y)</code></p>
+                 </li>
+                  <li>Example Evaluation Steps:
+                      <pre><code>   3 + 4 * 4 + 5 * (4 + 3) - 1
+=> 3 + 4 * 4 + 5 * 7 - 1     // (1) Parentheses
+=> 3 + 16 + 5 * 7 - 1       // (2) Multiplication (leftmost *)
+=> 3 + 16 + 35 - 1         // (3) Multiplication
+=> 19 + 35 - 1             // (4) Addition (leftmost +)
+=> 54 - 1                   // (5) Addition
+=> 53                       // (6) Subtraction
+</code></pre>
+                  </li>
+            </ul>
+
+         </section> <!-- End Chapter 2 -->
+
+        <div class="navigation">
+            <a href="index.html">&laquo; Back to Index</a>
+            <a href="lecture2.html">Next Lecture (Chapter 3) &raquo;</a>
+        </div>
+    </div>
+</body>
+</html>
