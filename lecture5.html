@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE109 - Lecture 5: Methods (Chapter 6)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Lecture 5: Methods</h1>
+        <p class="lecture-number">Covers Textbook Chapter 6</p>
+
+        <section id="opening-problem">
+            <h2>Opening Problem</h2>
+            <p>Find the sum of integers from 1 to 10, from 20 to 30, and from 35 to 45, respectively.</p>
+            <h4>Problem Code (Repetitive):</h4>
+            <pre><code>int sum = 0;
+for (int i = 1; i <= 10; i++)
+    sum += i;
+System.out.println("Sum from 1 to 10 is " + sum);
+
+sum = 0; // Reset sum
+for (int i = 20; i <= 30; i++)
+    sum += i;
+System.out.println("Sum from 20 to 30 is " + sum);
+
+sum = 0; // Reset sum again
+for (int i = 35; i <= 45; i++)
+    sum += i;
+System.out.println("Sum from 35 to 45 is " + sum);</code></pre>
+             <p>Notice the repeated logic for summing numbers within a range. This is where methods become useful for code reuse and modularity.</p>
+            <h4>Solution Using a Method:</h4>
+            <pre><code>// Define a method to calculate the sum
+public static int sum(int i1, int i2) {
+    int result = 0; // Changed name from sum to result for clarity
+    for (int i = i1; i <= i2; i++) {
+        result += i;
+    }
+    return result; // Return the calculated sum
+}
+
+public static void main(String[] args) {
+    // Call the method for different ranges
+    System.out.println("Sum from 1 to 10 is " + sum(1, 10));
+    System.out.println("Sum from 20 to 30 is " + sum(20, 30));
+    System.out.println("Sum from 35 to 45 is " + sum(35, 45));
+}</code></pre>
+        </section>
+
+        <section id="objectives">
+             <h2>Objectives (Summary from Slide 264)</h2>
+             <p>This chapter covers: defining methods with parameters, invoking methods with arguments, methods with and without return values, passing arguments by value, developing reusable code, method overloading, variable scope, method abstraction, and stepwise refinement.</p>
+        </section>
+
+        <section id="defining-methods">
+            <h2>Defining Methods</h2>
+            <p>A <strong>method</strong> is a collection of statements grouped together to perform an operation. It allows for code reuse and organization.</p>
+
+            <figure>
+                <img src="page_266.jpg" alt="Diagram showing method definition and invocation components" style="max-width: 90%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">Anatomy of a Method Definition and Invocation</figcaption>
+            </figure>
+
+            <h3>Method Components:</h3>
+            <ul>
+                <li><strong>Method Header:</strong> Defines the method's modifiers, return type, name, and parameters.
+                    <ul>
+                        <li><strong>Modifiers:</strong> Keywords like `public`, `static` that specify properties of the method (access level, association with class/object).</li>
+                        <li><strong>Return Value Type:</strong> The data type of the value the method returns (e.g., `int`, `double`, `String`). Use `void` if the method does not return a value.</li>
+                        <li><strong>Method Name:</strong> An identifier for the method (follows naming conventions, e.g., `max`, `computeSum`).</li>
+                        <li><strong>Formal Parameters:</strong> Variables declared in the method header enclosed in parentheses `()`. They act as placeholders for values passed into the method. (e.g., `int num1, int num2`). The list can be empty `()`.</li>
+                        <li><strong>Method Signature:</strong> The combination of the method name and the parameter list (types and order). It uniquely identifies a method within a class for overloading purposes.</li>
+                    </ul>
+                </li>
+                <li><strong>Method Body:</strong> Contains the statements that perform the method's operation, enclosed in braces `{}`. Includes local variable declarations and logic.</li>
+                <li><strong>`return` statement:</strong> Used in value-returning methods to send a value back to the caller. The type of the returned value must match the method's `returnValueType`. `void` methods do not require a `return` statement, but can use `return;` to exit early.</li>
+            </ul>
+
+            <h3>Invoking Methods:</h3>
+            <ul>
+                <li>Calling a method to execute its code.</li>
+                <li><strong>Actual Parameters (Arguments):</strong> The values passed to the method when it is invoked (e.g., `x`, `y` in `max(x, y)`). These values are assigned to the formal parameters.</li>
+                 <li>For methods returning a value, the invocation itself acts as an expression of that type (e.g., `int z = max(x, y);`).</li>
+                 <li>For `void` methods, the invocation is a statement itself (e.g., `printReport();`).</li>
+             </ul>
+
+            <h3>Example: `max` Method</h3>
+            <pre><code>// Definition
+public static int max(int num1, int num2) { // Header
+    // Body
+    int result;
+    if (num1 > num2) {
+        result = num1;
+    } else {
+        result = num2;
+    }
+    return result; // Return statement
+}
+
+// Invocation in another method (e.g., main)
+int i = 5;
+int j = 2;
+int k = max(i, j); // k gets the value 5. i and j are actual parameters.
+System.out.println("The maximum is " + k);</code></pre>
+
+            <div class="caution">
+                <h4>CAUTION: Return Statement Required</h4>
+                <p>A value-returning method (non-`void`) <em>must</em> have a `return` statement that returns a value of the declared type along every possible execution path. The compiler checks this.</p>
+                <pre><code class="language-java">// Example with potential compile error (Slide 283a)
+public static int sign(int n) {
+    if (n > 0)
+        return 1;
+    else if (n == 0)
+        return 0;
+    // Problem: What if n < 0? Compiler doesn't see a guaranteed return.
+    // Need to handle the n < 0 case explicitly with a return.
+}
+
+// Corrected version (Slide 283b)
+public static int sign(int n) {
+    if (n > 0)
+        return 1;
+    else if (n == 0)
+        return 0;
+    else // This else guarantees a return path for n < 0
+        return -1;
+}</code></pre>
+            </div>
+
+        </section>
+
+        <section id="calling-methods">
+            <h2>Calling Methods & Call Stack</h2>
+            <h3>Testing the `max` Method</h3>
+             <pre><code>// TestMax.java
+public class TestMax {
+    /** Main method */
+    public static void main(String[] args) {
+        int i = 5;
+        int j = 2;
+        int k = max(i, j); // Invoke max method
+        System.out.println("The maximum between " + i +
+                           " and " + j + " is " + k);
+    }
+
+    /** Return the max between two numbers */
+    public static int max(int num1, int num2) {
+        int result;
+        if (num1 > num2)
+            result = num1;
+        else
+            result = num2;
+        return result;
+    }
+}</code></pre>
+             <p>(Note: Run/Animation buttons on slide 271 are inactive.)</p>
+
+            <h3>The Call Stack</h3>
+            <ul>
+                <li>When a method is invoked, the system uses a space in memory called the <strong>call stack</strong> to store information for the method call (parameters, local variables, return address).</li>
+                <li>This space is called an <strong>activation record</strong> or <strong>stack frame</strong>.</li>
+                <li>When a method calls another method, a new activation record is pushed onto the top of the stack for the called method.</li>
+                <li>When a method finishes executing (returns), its activation record is popped off the stack, and control returns to the caller (at the point just after the call).</li>
+                <li>The stack operates in a Last-In, First-Out (LIFO) manner.</li>
+            </ul>
+             <figure>
+                <img src="page_285.jpg" alt="Diagram showing call stack evolution during max method call" style="max-width: 90%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">Call Stack Example for `max(i, j)`</figcaption>
+            </figure>
+             <p>(Note: Animation links on slides 272-282 and 286-295 trace the stack visually.)</p>
+             <ul>
+                 <li>`main` starts -> stack frame for `main` (with `i`, `j`) pushed.</li>
+                 <li>`main` calls `max(i, j)` -> stack frame for `max` (with `num1`, `num2`, `result`) pushed on top. `i`'s value copied to `num1`, `j`'s value copied to `num2`.</li>
+                 <li>`max` executes, calculates `result`.</li>
+                 <li>`max` returns `result` -> `max` stack frame popped off. Return value used in `main` (assigned to `k`).</li>
+                 <li>`main` continues execution (e.g., `println`).</li>
+                 <li>`main` finishes -> `main` stack frame popped off. Stack is empty.</li>
+             </ul>
+
+            <h3>Reusing Methods from Other Classes</h3>
+            <p>One benefit of methods is reusability. A `public static` method (like `max` in `TestMax`) can be called from *any other class* using the syntax `ClassName.methodName(arguments)`.</p>
+            <pre><code>// Example in a different class, say MyProgram.java
+public class MyProgram {
+    public static void main(String[] args) {
+        int value1 = 10;
+        int value2 = 20;
+        // Call the static max method from the TestMax class
+        int maximum = TestMax.max(value1, value2);
+        System.out.println("The max is: " + maximum); // Prints 20
+    }
+}</code></pre>
+        </section>
+
+        <section id="void-methods">
+            <h2>`void` Methods</h2>
+            <p>A method that does not return a value is declared with the `void` return type.</p>
+            <p>It performs some action(s) but doesn't send a result back to the caller.</p>
+            <p>Invocation of a `void` method is a statement itself.</p>
+            <pre><code>/** Method to print a grade based on score */
+public static void printGrade(double score) {
+    if (score >= 90.0) {
+        System.out.println('A');
+    } else if (score >= 80.0) {
+        System.out.println('B');
+    } else if (score >= 70.0) {
+        System.out.println('C');
+    } else if (score >= 60.0) {
+        System.out.println('D');
+    } else {
+        System.out.println('F');
+    }
+    // No return value needed
+}
+
+// Invocation
+double myScore = 78.5;
+printGrade(myScore); // Just call the method; don't assign its result (there isn't one)
+// Output: C</code></pre>
+             <p>(Note: Run buttons on slide 296 are inactive.)</p>
+        </section>
+
+        <section id="pass-by-value">
+            <h2>Passing Parameters by Value</h2>
+            <p>Java uses <strong>pass-by-value</strong> when invoking methods.</p>
+            <ul>
+                <li><strong>Primitive Types (int, double, char, boolean, etc.):</strong> A <em>copy</em> of the argument's value is passed to the method's formal parameter. Changes made to the parameter *inside* the method do <em>not</em> affect the original argument variable outside the method.</li>
+                <li><strong>Reference Types (Objects, including Arrays and Strings):</strong> A <em>copy</em> of the argument's reference value (memory address) is passed to the method's formal parameter. Both the original argument and the method parameter now refer to the *same object* in memory (the heap).
+                    <ul>
+                        <li>If the method *modifies the contents* of the object via the parameter reference (e.g., changing an array element: `numbers[0] = 5555;`), the original object *is affected*.</li>
+                        <li>If the method *reassigns the parameter* to refer to a completely new object (e.g., `parameter = new SomeObject();`), this does *not* affect the original argument variable outside the method (it still refers to the original object).</li>
+                    </ul>
+                 </li>
+            </ul>
+
+            <h4>Example: Primitive vs. Array Passing</h4>
+             <pre><code>// TestPassByValue.java
+public class TestPassByValue {
+    public static void main(String[] args) {
+        // Demonstrate passing primitive type value
+        int num1 = 1;
+        int num2 = 2;
+        System.out.println("Before swap: num1=" + num1 + ", num2=" + num2);
+        swap(num1, num2); // Pass copies of values
+        System.out.println("After swap: num1=" + num1 + ", num2=" + num2); // num1, num2 unchanged
+
+        System.out.println("---");
+
+        // Demonstrate passing array reference value
+        int[] a = {1, 2};
+        System.out.println("Before swapFirstTwoInArray: a[0]=" + a[0] + ", a[1]=" + a[1]);
+        swapFirstTwoInArray(a); // Pass copy of reference to array 'a'
+        System.out.println("After swapFirstTwoInArray: a[0]=" + a[0] + ", a[1]=" + a[1]); // Array 'a' IS changed
+    }
+
+    /** Swap two int variables - DOES NOT WORK due to pass-by-value */
+    public static void swap(int n1, int n2) {
+        System.out.println("\tInside swap method");
+        System.out.println("\t\tBefore swapping: n1=" + n1 + ", n2=" + n2);
+        // Swap n1 with n2 (only affects local copies n1, n2)
+        int temp = n1;
+        n1 = n2;
+        n2 = temp;
+        System.out.println("\t\tAfter swapping: n1=" + n1 + ", n2=" + n2);
+    }
+
+     /** Swap the first two elements in an array - WORKS due to pass-by-reference-value */
+    public static void swapFirstTwoInArray(int[] array) {
+         // array parameter receives copy of reference from 'a'
+         // Both 'array' and 'a' point to the SAME array object
+        int temp = array[0];
+        array[0] = array[1]; // Modifies the original array object
+        array[1] = temp;     // Modifies the original array object
+    }
+}</code></pre>
+             <p>(Note: Run buttons on slides 298/299 are inactive. Slide 300 shows stack diagrams.)</p>
+              <figure>
+                 <img src="page_368.jpg" alt="Diagram showing stack and heap for array passing" style="max-width: 80%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">Pass-by-value for Array (Reference is copied)</figcaption>
+             </figure>
+
+        </section>
+
+        <section id="modularity-overloading">
+            <h2>Modularizing Code & Method Overloading</h2>
+
+            <h3>Modularizing Code</h3>
+            <p>Methods help break down complex problems into smaller, manageable, reusable pieces.</p>
+            <ul>
+                <li>Improves readability.</li>
+                <li>Makes code easier to debug and maintain.</li>
+                <li>Promotes code reuse.</li>
+            </ul>
+            <p>Examples (from slide 301): Revisiting GCD and Prime Number problems using dedicated methods (`gcd(n1, n2)`, `isPrime(number)`) makes the `main` method cleaner and the logic reusable.</p>
+            <p>(Note: Run buttons on slide 301 are inactive.)</p>
+
+            <h3>Method Overloading</h3>
+            <p>Allows defining multiple methods in the same class with the <strong>same name</strong> but different <strong>parameter lists</strong> (different number of parameters, different types of parameters, or different order of parameter types).</p>
+            <p>The compiler determines which overloaded method to call based on the arguments provided in the invocation.</p>
+             <p>The return type is <em>not</em> part of the method signature for overloading purposes. You cannot declare two methods with the same signature but different return types.</p>
+            <h4>Example: Overloading the `max` method</h4>
+            <pre><code>public class TestMethodOverloading {
+    public static void main(String[] args) {
+        // Invoke the int version
+        System.out.println("Max of 3 and 4 is " + max(3, 4));
+
+        // Invoke the double version
+        System.out.println("Max of 3.0 and 5.4 is " + max(3.0, 5.4));
+
+        // Invoke the version with three parameters
+        System.out.println("Max of 3.0, 5.4, and 10.14 is " + max(3.0, 5.4, 10.14));
+    }
+
+    // Method 1: max for two ints
+    public static int max(int num1, int num2) {
+        System.out.println("(int version called)");
+        return (num1 > num2) ? num1 : num2;
+    }
+
+    // Method 2: max for two doubles (Overloaded)
+    public static double max(double num1, double num2) {
+         System.out.println("(double version called)");
+        return (num1 > num2) ? num1 : num2;
+    }
+
+    // Method 3: max for three doubles (Overloaded)
+    public static double max(double num1, double num2, double num3) {
+         System.out.println("(double, double, double version called)");
+        return max(max(num1, num2), num3); // Reuse the two-parameter version
+    }
+}</code></pre>
+             <p>(Note: Run button on slide 303 is inactive.)</p>
+
+            <h3>Ambiguous Invocation</h3>
+            <p>Occurs when the compiler cannot determine the most specific match for a method call among overloaded methods. This results in a <strong>compile error</strong>.</p>
+            <pre><code>// AmbiguousOverloading.java
+public class AmbiguousOverloading {
+    public static void main(String[] args) {
+        // Which max to call? max(int, double) or max(double, int)?
+        // System.out.println(max(1, 2)); // COMPILE ERROR! Ambiguous.
+        // Java cannot decide if 1 should be cast to double or 2 should.
+
+        // To resolve, explicitly cast one argument:
+        System.out.println(max(1.0, 2)); // Calls max(double, int)
+        System.out.println(max(1, 2.0)); // Calls max(int, double)
+    }
+
+    public static double max(int num1, double num2) {
+        System.out.println("max(int, double) called");
+        return (num1 > num2) ? num1 : num2;
+    }
+
+    public static double max(double num1, int num2) {
+        System.out.println("max(double, int) called");
+        return (num1 > num2) ? num1 : num2;
+    }
+}</code></pre>
+             <p>(Note: Code shown on slide 305 causes a compile error.)</p>
+        </section>
+
+        <section id="scope-abstraction">
+            <h2>Scope of Variables & Method Abstraction</h2>
+
+            <h3>Scope of Local Variables</h3>
+            <ul>
+                <li>A <strong>local variable</strong> is declared inside a method (or a block within a method).</li>
+                <li>The <strong>scope</strong> of a local variable is the part of the program where it can be referenced.</li>
+                <li>Scope starts from the variable's declaration and continues to the end of the <strong>block</strong> `{}` containing the declaration.</li>
+                <li>A local variable must be declared before it can be used.</li>
+                <li>You can declare variables with the same name in different, non-nested blocks within a method.</li>
+                <li>You <strong>cannot</strong> declare a variable with the same name as one already declared in an enclosing (outer) block (shadowing local variables is generally disallowed or bad practice in Java within the same method).</li>
+                 <li>A variable declared in a `for` loop's initialization (`for (int i = 0; ...`) has its scope limited to the loop itself (header and body).</li>
+             </ul>
+             <figure>
+                <img src="page_309.jpg" alt="Diagram showing valid and invalid variable scopes" style="max-width: 90%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">Scope Examples (Nested vs. Non-nested Blocks)</figcaption>
+            </figure>
+
+            <h3>Method Abstraction</h3>
+            <ul>
+                <li>Separating the use of a method from its implementation details.</li>
+                <li>The user (caller) only needs to know the method's <strong>signature</strong> (name, parameters) and what it <strong>does</strong> (its contract/purpose/return value), not *how* it does it.</li>
+                <li>The implementation details inside the method body are hidden (like a "black box").</li>
+                <li>This simplifies program design and allows implementation changes without affecting callers, as long as the contract is maintained.</li>
+            </ul>
+              <figure>
+                <img src="page_312.jpg" alt="Diagram of method abstraction black box" style="max-width: 60%; display: block; margin: 15px auto;">
+                 <figcaption class="figure-description">Method Abstraction: The Black Box View</figcaption>
+            </figure>
+
+            <h3>Benefits of Methods</h3>
+            <ul>
+                <li><strong>Write Once, Reuse Anywhere:</strong> Reduces redundant code.</li>
+                <li><strong>Information Hiding:</strong> Hides implementation details from the user/caller (Abstraction).</li>
+                <li><strong>Reduce Complexity:</strong> Breaks down large problems into smaller, manageable, understandable parts (Modularity).</li>
+            </ul>
+        </section>
+
+         <section id="case-study-random-char">
+             <h2>Case Study: Generating Random Characters</h2>
+             <p>How to generate random characters using `Math.random()` and character casting.</p>
+             <ul>
+                 <li>Recall `Math.random()` gives a `double` in [0.0, 1.0).</li>
+                 <li>To get a random integer in [0, 65535] (full Unicode basic range): `(int)(Math.random() * 65536)` or `(int)(Math.random() * (65535 + 1))`</li>
+                 <li>To get a random character, cast this integer to `char`: `(char)(Math.random() * 65536)`</li>
+                 <li>To get a random lowercase letter ('a' to 'z'):
+                     The range is from `(int)'a'` to `(int)'z'`.
+                     The number of characters is `(int)'z' - (int)'a' + 1`.
+                     Random character = `(char)('a' + Math.random() * ('z' - 'a' + 1))`
+                 </li>
+                 <li>General formula for random character between `ch1` and `ch2` (inclusive, `ch1 <= ch2`):
+                      <code>(char)(ch1 + Math.random() * (ch2 - ch1 + 1))</code>
+                 </li>
+             </ul>
+             <h4>Example Utility Class (`RandomCharacter.java` from slide 318)</h4>
+              <pre><code>public class RandomCharacter {
+    /** Generate a random character between ch1 and ch2 */
+    public static char getRandomCharacter(char ch1, char ch2) {
+        return (char)(ch1 + Math.random() * (ch2 - ch1 + 1));
+    }
+
+    /** Generate a random lowercase letter */
+    public static char getRandomLowerCaseLetter() {
+        return getRandomCharacter('a', 'z');
+    }
+
+    /** Generate a random uppercase letter */
+    public static char getRandomUpperCaseLetter() {
+        return getRandomCharacter('A', 'Z');
+    }
+
+    /** Generate a random digit character */
+    public static char getRandomDigitCharacter() {
+        return getRandomCharacter('0', '9');
+    }
+
+    /** Generate a random character (any Unicode) */
+    public static char getRandomCharacter() {
+        return getRandomCharacter('\u0000', '\uFFFF');
+    }
+}</code></pre>
+               <p>(Note: Run button on slide 318 is inactive.)</p>
+         </section>
+
+        <div class="navigation">
+            <a href="lecture4.html">« Previous Lecture (Chapter 5)</a>
+            <a href="lecture6.html">Next Lecture (Chapters 7&8) »</a>
+        </div>
+         <div class="navigation" style="margin-top: 10px; justify-content: center;">
+            <a href="index.html">Back to Index</a>
+        </div>
+    </div>
+</body>
+</html>
